@@ -7,7 +7,7 @@ import blogHome from "./views/Home/blog-Home.vue";
 <template>
   <div class="common-layout">
     <el-container>
-      <el-aside width="200px">
+      <el-aside width="auto" class="blog_aside">
         <blogAside />
       </el-aside>
       <el-container>
@@ -23,6 +23,9 @@ import blogHome from "./views/Home/blog-Home.vue";
 </template>
 
 <style scoped>
+.blog_aside {
+  /* width: auto; */
+}
 .blog_header {
   background: #fff;
 }

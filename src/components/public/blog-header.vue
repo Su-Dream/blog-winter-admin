@@ -1,7 +1,12 @@
 <template>
   <el-row class="row-bg" align="middle">
     <el-col :span="2" class="aside-control">
-      <el-button class="aside-control-btn" type="primary" :icon="Menu" />
+      <el-button
+        @click="changeCollapseHandler({ isCollapse, titleValue })"
+        class="aside-control-btn"
+        type="primary"
+        :icon="isIcon"
+      />
     </el-col>
     <el-col :span="12">
       <el-breadcrumb separator="/">
@@ -23,7 +28,7 @@
 
 <script setup>
 import { Grid, HomeFilled, Menu } from "@element-plus/icons-vue";
-import { reactive, toRefs } from "vue";
+import { reactive, markRaw, ref, toRefs } from "vue";
 const state = reactive({
   circleUrl:
     "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
@@ -31,7 +36,25 @@ const state = reactive({
 });
 const { circleUrl } = toRefs(state);
 
-// todo:点击切换侧边栏
+// ?:点击切换侧边栏
+
+import EventBus from "@/utils/event-bus.js";
+const isCollapse = ref(true);
+const titleValue = ref("星域");
+const isIcon = ref(markRaw(Grid));
+const changeCollapseHandler = obj => {
+  console.log(`changeCollapseHandler被执行了，数据为${obj}`);
+  EventBus.emit("changeCollapse", obj);
+  if (obj.titleValue === "星域") {
+    titleValue.value = "星域管理系统";
+    isIcon.value = markRaw(Menu);
+  } else {
+    titleValue.value = "星域";
+    isIcon.value = markRaw(Grid);
+  }
+
+  isCollapse.value = !obj.isCollapse;
+};
 </script>
 
 <style scoped>
