@@ -1,11 +1,11 @@
 <template>
   <el-row class="row-bg" align="middle">
     <el-col :span="2" class="aside-control">
-      <el-button class="aside-control-btn" type="primary" :icon="Grid" />
+      <el-button class="aside-control-btn" type="primary" :icon="Menu" />
     </el-col>
     <el-col :span="12">
       <el-breadcrumb separator="/">
-        <el-breadcrumb-item :to="{ path: '/' }">Home</el-breadcrumb-item>
+        <el-breadcrumb-item :to="{ path: '/' }"> Home</el-breadcrumb-item>
         <el-breadcrumb-item>
           <a href="/">test</a>
         </el-breadcrumb-item>
@@ -14,7 +14,7 @@
     <el-col :offset="9" :span="1">
       <div class="demo-basic--circle">
         <div class="block">
-          <el-avatar :size="50" :src="circleUrl" />
+          <el-avatar :size="40" :src="circleUrl" />
         </div>
       </div>
     </el-col>
@@ -22,7 +22,7 @@
 </template>
 
 <script setup>
-import { Grid } from "@element-plus/icons-vue";
+import { Grid, HomeFilled, Menu } from "@element-plus/icons-vue";
 import { reactive, toRefs } from "vue";
 const state = reactive({
   circleUrl:
@@ -37,13 +37,11 @@ const { circleUrl } = toRefs(state);
 <style scoped>
 .aside-control .aside-control-btn {
   height: 100%;
-}
-.el-button--small {
-  font-size: 1.2rem;
+  font-size: 16px;
 }
 .el-row {
   height: 100%;
-  margin: 10px 0;
+  padding: 10px 0;
 }
 .el-row:last-child {
   margin-bottom: 0;

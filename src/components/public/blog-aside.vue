@@ -7,34 +7,42 @@
         @open="handleOpen"
         @close="handleClose"
       >
+        <el-menu-item index="0">
+          <el-icon><House /></el-icon>
+          <span>主页</span>
+        </el-menu-item>
         <el-sub-menu index="1">
           <template #title>
-            <el-icon><location /></el-icon>
-            <span>Navigator One</span>
+            <el-icon><User /></el-icon>
+            <span>账号管理</span>
           </template>
-          <el-menu-item-group title="Group One">
-            <el-menu-item index="1-1">item one</el-menu-item>
-            <el-menu-item index="1-2">item two</el-menu-item>
-          </el-menu-item-group>
-          <el-menu-item-group title="Group Two">
-            <el-menu-item index="1-3">item three</el-menu-item>
-          </el-menu-item-group>
-          <el-sub-menu index="1-4">
-            <template #title>item four</template>
-            <el-menu-item index="1-4-1">item one</el-menu-item>
-          </el-sub-menu>
+          <el-menu-item index="1-1">用户</el-menu-item>
+          <el-menu-item index="1-2">管理员</el-menu-item>
         </el-sub-menu>
-        <el-menu-item index="2">
-          <el-icon><icon-menu /></el-icon>
-          <span>Navigator Two</span>
-        </el-menu-item>
-        <el-menu-item index="3" disabled>
-          <el-icon><document /></el-icon>
-          <span>Navigator Three</span>
+        <el-sub-menu index="2">
+          <template #title>
+            <el-icon><Document /></el-icon>
+            <span>文章管理</span>
+          </template>
+          <el-menu-item index="2-1">文章列表</el-menu-item>
+          <el-menu-item index="2-2">标签列表</el-menu-item>
+          <el-menu-item index="2-3">分类列表</el-menu-item>
+        </el-sub-menu>
+        <el-menu-item index="3">
+          <el-icon><ChatDotSquare /></el-icon>
+          <span>评论管理</span>
         </el-menu-item>
         <el-menu-item index="4">
+          <el-icon><Link /></el-icon>
+          <span>友链管理</span>
+        </el-menu-item>
+        <el-menu-item index="5">
+          <el-icon><Picture /></el-icon>
+          <span>图片管理</span>
+        </el-menu-item>
+        <el-menu-item index="6">
           <el-icon><setting /></el-icon>
-          <span>Navigator Four</span>
+          <span>网站设置</span>
         </el-menu-item>
       </el-menu>
     </el-col>
@@ -43,9 +51,12 @@
 
 <script setup>
 import {
+  House,
+  User,
   Document,
-  Menu as IconMenu,
-  Location,
+  ChatDotSquare,
+  Link,
+  Picture,
   Setting,
 } from "@element-plus/icons-vue";
 const handleOpen = (key, keyPath) => {
