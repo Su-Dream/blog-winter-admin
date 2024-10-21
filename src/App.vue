@@ -2,11 +2,13 @@
 import blogAside from "./components/public/blog-aside.vue";
 import blogHeader from "./components/public/blog-header.vue";
 import blogHome from "./views/Home/blog-Home.vue";
+import blogLogin from "./views/login/blog-Login.vue";
 </script>
 
 <template>
   <div class="common-layout">
-    <el-container>
+    <blogLogin />
+    <!-- <el-container>
       <el-aside width="auto" class="blog_aside">
         <blogAside />
       </el-aside>
@@ -18,14 +20,11 @@ import blogHome from "./views/Home/blog-Home.vue";
           <blogHome />
         </el-main>
       </el-container>
-    </el-container>
+    </el-container> -->
   </div>
 </template>
 
 <style scoped>
-.blog_aside {
-  /* width: auto; */
-}
 .blog_header {
   background: #fff;
 }
