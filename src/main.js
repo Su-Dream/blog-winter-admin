@@ -1,12 +1,17 @@
 import { createApp } from "vue";
-// import { router } from "@/routes/index";
+import { createPinia } from "pinia";
+import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
+import router from "@/routes/index";
 import App from "./App.vue";
-import "./style.css";
 import ElementPlus from "element-plus";
-import "element-plus/dist/index.css";
 
+import "./style.css";
+import "element-plus/dist/index.css";
+const pinia = createPinia();
+pinia.use(piniaPluginPersistedstate);
 const app = createApp(App);
 // 全局配置表单尺寸
 app.use(ElementPlus, { size: "default", zIndex: 3000 });
-// app.use(router);
+app.use(pinia);
+app.use(router);
 app.mount("#app");

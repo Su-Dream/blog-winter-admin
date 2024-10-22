@@ -65,6 +65,8 @@
 import { reactive, ref, onMounted } from "vue";
 import { setUserCookie, getUserCookie, clearUserCookie } from "@/utils/auth.js";
 import { ElMessage } from "element-plus";
+import { useUserStore } from "../../stores/user";
+import router from "@/routes";
 onMounted(() => {
   getCookieForm();
 });
@@ -110,6 +112,16 @@ const submitHandler = () => {
   } else {
     clearUserCookie();
   }
+  // todo:发送请求拿到用户信息
+  const userStore = useUserStore();
+  // 判断是不是管理员用户
+  if (true) {
+    userStore.setRole("admin");
+  }
+  // 跳转到仪表盘
+  console.log(`登录成功，设置管理员权限${userStore.role}`);
+
+  router.push(userStore.role === "admin" ? "/home" : "/login");
 };
 //* 提交操作
 const submitForm = formEl => {
@@ -162,7 +174,7 @@ const submitForm = formEl => {
 }
 
 h2 {
-  margin: 20px 0;
+  margin: 0 0 40px;
   text-align: center;
 }
 
