@@ -13,3 +13,5 @@ const blogNotification = (title, message, type = "success") => {
     type,
   });
 };
+
+module.exports = { blogNotification };

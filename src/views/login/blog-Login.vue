@@ -9,7 +9,7 @@
         status-icon
         :rules="rules"
         label-width="auto"
-        class="demo-ruleForm"
+        class="blog-ruleForm"
       >
         <el-form-item prop="usnm">
           <el-tooltip
@@ -41,17 +41,15 @@
             />
           </el-tooltip>
         </el-form-item>
-        <div class="outher">
+        <div class="other">
           <div class="savePwd">
-            <el-radio v-model="savePwd" size="large" :value="true"
-              >记住密码</el-radio
-            >
+            <el-checkbox v-model="savePwd" label="记住密码" size="large" />
           </div>
           <el-link :underline="false" type="primary">Forget Password</el-link>
         </div>
         <el-form-item>
           <el-button
-            class="login__btn"
+            class="login-submit"
             type="primary"
             @click="submitForm(ruleFormRef)"
           >
@@ -64,11 +62,23 @@
 </template>
 
 <script setup>
-import { reactive, ref } from "vue";
+import { reactive, ref, onMounted } from "vue";
+import { setUserCookie, getUserCookie, clearUserCookie } from "@/utils/auth.js";
+import { ElMessage } from "element-plus";
+onMounted(() => {
+  getCookieForm();
+});
+const getCookieForm = () => {
+  const { username, password } = getUserCookie();
+  if (username && password) {
+    ruleForm.usnm = username;
+    ruleForm.pass = password;
+    savePwd.value = true;
+  }
+};
+//* 规则表单
 const ruleFormRef = ref();
 const savePwd = ref(false);
-
-//* 规则表单
 const ruleForm = reactive({
   usnm: "",
   pass: "",
@@ -97,9 +107,23 @@ const submitForm = formEl => {
   if (!formEl) return;
   formEl.validate(valid => {
     if (valid) {
-      // todo:这里继续登录操作,例如发送请求
+      // ?保存密码操作
+      if (savePwd.value) {
+        setUserCookie(ruleForm.usnm, ruleForm.pass, 7); // 记住密码
+      } else {
+        clearUserCookie();
+      }
+      // todo
+      ElMessage({
+        message: "登录成功!正在跳转页面...",
+        type: "success",
+      });
       console.log("submit!");
     } else {
+      ElMessage({
+        message: "登录失败,请检查表单信息",
+        type: "error",
+      });
       console.log("error submit!");
     }
   });
@@ -110,29 +134,39 @@ const submitForm = formEl => {
 .el-link .el-icon--right.el-icon {
   vertical-align: text-bottom;
 }
+
 .blog_login {
   position: relative;
   margin: 0 auto;
   width: 80%;
   height: 37.5rem;
 }
+
 .blog_login .login {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%);
-  width: 15rem;
+  width: 100%;
+  max-width: 20rem;
 }
+
+.blog_login .login .blog-ruleForm {
+  margin: 0 auto;
+}
+
 h2 {
   margin: 20px 0;
   text-align: center;
 }
-.blog_login .login .outher {
+
+.blog_login .login .other {
   line-height: 40px;
   display: flex;
   justify-content: space-between;
 }
-.login__btn {
+
+.login-submit {
   width: 100%;
 }
 </style>

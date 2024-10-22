@@ -9,8 +9,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "crypto-js": "^4.2.0",
     "echarts": "^5.5.1",
     "element-plus": "^2.8.6",
+    "js-cookie": "^3.0.5",
     "mitt": "^3.0.1",
     "vue": "^3.5.10",
     "vue-router": "^4.4.5"
