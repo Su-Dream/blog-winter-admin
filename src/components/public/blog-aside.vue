@@ -2,50 +2,51 @@
   <el-row class="tac">
     <el-col>
       <el-menu
+        :router="true"
         :collapse="isCollapse"
         active-text-color="#1677ff"
         text-color="#FFFFFFA8"
         background-color="#001529"
-        default-active="0"
+        default-active="home"
         class="el-menu-vertical"
         @open="handleOpen"
         @close="handleClose"
       >
         <h2 class="title">{{ titleValue }}</h2>
-        <el-menu-item index="0">
+        <el-menu-item index="/home">
           <el-icon><House /></el-icon>
           <template #title>首页</template>
         </el-menu-item>
-        <el-sub-menu index="1">
+        <el-sub-menu index="/account">
           <template #title>
             <el-icon><User /></el-icon>
             <span>账号管理</span>
           </template>
-          <el-menu-item index="1-1">用户</el-menu-item>
-          <el-menu-item index="1-2">管理员</el-menu-item>
+          <el-menu-item index="/account/user">用户</el-menu-item>
+          <el-menu-item index="/account/admin">管理员</el-menu-item>
         </el-sub-menu>
-        <el-sub-menu index="2">
+        <el-sub-menu index="/article">
           <template #title>
             <el-icon><Document /></el-icon>
             <span>文章管理</span>
           </template>
-          <el-menu-item index="2-1">文章列表</el-menu-item>
-          <el-menu-item index="2-2">标签列表</el-menu-item>
-          <el-menu-item index="2-3">分类列表</el-menu-item>
+          <el-menu-item index="/article/list">文章列表</el-menu-item>
+          <el-menu-item index="/article/tags">标签列表</el-menu-item>
+          <el-menu-item index="/article/types">分类列表</el-menu-item>
         </el-sub-menu>
-        <el-menu-item index="3">
+        <el-menu-item index="/comments">
           <el-icon><ChatDotSquare /></el-icon>
           <template #title>评论管理</template>
         </el-menu-item>
-        <el-menu-item index="4">
+        <el-menu-item index="/friendLinks">
           <el-icon><Link /></el-icon>
           <template #title>友链管理</template>
         </el-menu-item>
-        <el-menu-item index="5">
+        <el-menu-item index="/images">
           <el-icon><Picture /></el-icon>
           <template #title>图片管理</template>
         </el-menu-item>
-        <el-menu-item index="6">
+        <el-menu-item index="/setting">
           <el-icon><setting /></el-icon>
           <template #title>网站设置</template>
         </el-menu-item>

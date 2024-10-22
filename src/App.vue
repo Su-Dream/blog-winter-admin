@@ -24,7 +24,7 @@ const isLoggedIn = computed(() => {
           <blogHeader />
         </el-header>
         <el-main>
-          <blogHome />
+          <router-view />
         </el-main>
       </el-container>
     </el-container>

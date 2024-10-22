@@ -2,8 +2,7 @@ import Cookies from "js-cookie";
 import CryptoJS from "crypto-js";
 
 // 盐
-const secretKey = "U2FsdGVkX1+QNr8owmsDBCzoq/B39wqUBm9AdOLbRoM="; // 替换为你的密钥
-
+const secretKey = "U2FsdGVkX1+QNr8owmsDBCzoq/B39wqUBm9AdOLbRoM=";
 /**
  * AES 加密
  * @param {string} text

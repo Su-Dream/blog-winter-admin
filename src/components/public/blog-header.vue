@@ -9,12 +9,19 @@
       />
     </el-col>
     <el-col :span="12">
-      <el-breadcrumb separator="/">
-        <el-breadcrumb-item :to="{ path: '/' }"> Home</el-breadcrumb-item>
-        <el-breadcrumb-item>
-          <a href="/">test</a>
-        </el-breadcrumb-item>
+      <el-breadcrumb v-if="route.matched.length !== 1" separator="/">
+        <el-breadcrumb-item
+          v-for="(item, index) in route.matched"
+          :to="{ path: route.matched[index].path }"
+          >{{ route.matched[index].meta.title }}</el-breadcrumb-item
+        >
       </el-breadcrumb>
+      <!-- <el-breadcrumb separator="/">
+        <el-breadcrumb-item v-for="(item, index) in route.matched">
+          {{ console.log(route) }}
+          <router-link to="">{{ route.matched[index].meta.title }}</router-link>
+        </el-breadcrumb-item>
+      </el-breadcrumb> -->
     </el-col>
     <el-col :offset="9" :span="1">
       <div class="demo-basic--circle">
@@ -29,6 +36,8 @@
 <script setup>
 import { Grid, HomeFilled, Menu } from "@element-plus/icons-vue";
 import { reactive, markRaw, ref, toRefs } from "vue";
+import { useRoute } from "vue-router";
+const route = useRoute();
 const state = reactive({
   circleUrl:
     "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
