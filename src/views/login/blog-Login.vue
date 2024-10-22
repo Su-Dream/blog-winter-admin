@@ -102,23 +102,29 @@ const rules = reactive({
   usnm: [{ validator: validatePass, trigger: "blur" }],
   pass: [{ validator: validatePass2, trigger: "blur" }],
 });
+//* 登录逻辑
+const submitHandler = () => {
+  // ?保存密码操作
+  if (savePwd.value) {
+    setUserCookie(ruleForm.usnm, ruleForm.pass, 7); // 记住密码
+  } else {
+    clearUserCookie();
+  }
+};
 //* 提交操作
 const submitForm = formEl => {
   if (!formEl) return;
   formEl.validate(valid => {
     if (valid) {
-      // ?保存密码操作
-      if (savePwd.value) {
-        setUserCookie(ruleForm.usnm, ruleForm.pass, 7); // 记住密码
-      } else {
-        clearUserCookie();
-      }
-      // todo
+      //? 登录逻辑
+      console.log("submit!");
+      submitHandler();
+
+      //! 此处应该处理完所有登录逻辑
       ElMessage({
         message: "登录成功!正在跳转页面...",
         type: "success",
       });
-      console.log("submit!");
     } else {
       ElMessage({
         message: "登录失败,请检查表单信息",
