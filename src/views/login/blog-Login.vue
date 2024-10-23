@@ -119,9 +119,9 @@ const submitHandler = () => {
     userStore.setRole("admin");
   }
   // 跳转到仪表盘
-  console.log(`登录成功，设置管理员权限${userStore.role}`);
+  console.log(`登录成功，设置用户权限${userStore.role}`);
 
-  router.push(userStore.role === "admin" ? "/home" : "/login");
+  router.push("/home");
 };
 //* 提交操作
 const submitForm = formEl => {

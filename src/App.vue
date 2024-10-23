@@ -8,7 +8,7 @@ import { computed } from "vue";
 
 const userStore = useUserStore();
 const isLoggedIn = computed(() => {
-  return userStore.role === "admin" ? true : false;
+  return userStore.role !== "" ? true : false;
 });
 </script>
 

@@ -28,7 +28,7 @@ function decrypt(cipherText) {
  * @param {string} password -密码
  * @param {number} expiresDays -过期时间
  */
-export function setUserCookie(username, password, expiresDays = 7) {
+function setUserCookie(username, password, expiresDays = 7) {
   const encryptedPassword = encrypt(password);
   Cookies.set("username", username, { expires: expiresDays });
   Cookies.set("password", encryptedPassword, { expires: expiresDays });
@@ -38,7 +38,7 @@ export function setUserCookie(username, password, expiresDays = 7) {
  * 获取 Cookie
  * @returns {Object} 包含 username 和解密后的 password 的对象
  */
-export function getUserCookie() {
+function getUserCookie() {
   const username = Cookies.get("username");
   const encryptedPassword = Cookies.get("password");
   const password = decrypt(encryptedPassword);
@@ -46,7 +46,9 @@ export function getUserCookie() {
 }
 
 // 清除 Cookie
-export function clearUserCookie() {
+function clearUserCookie() {
   Cookies.remove("username");
   Cookies.remove("password");
 }
+
+export { setUserCookie, getUserCookie, clearUserCookie };
