@@ -20,12 +20,6 @@
           >{{ route.matched[index].meta.title }}</el-breadcrumb-item
         >
       </el-breadcrumb>
-      <!-- <el-breadcrumb separator="/">
-        <el-breadcrumb-item v-for="(item, index) in route.matched">
-          {{ console.log(route) }}
-          <router-link to="">{{ route.matched[index].meta.title }}</router-link>
-        </el-breadcrumb-item>
-      </el-breadcrumb> -->
     </el-col>
     <el-col :offset="9" :span="1">
       <div class="demo-basic--circle">

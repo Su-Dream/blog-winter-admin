@@ -25,7 +25,6 @@ export const routes = [
   },
   {
     path: "/account",
-    component: AccUser,
     meta: { title: "账号管理", requiresAuth: true, role: ["user", "admin"] },
 
     children: [
@@ -43,7 +42,6 @@ export const routes = [
   },
   {
     path: "/article",
-    component: ArtList,
     meta: { title: "文章管理", requiresAuth: true, role: ["admin"] },
     children: [
       {
@@ -65,7 +63,6 @@ export const routes = [
   },
   {
     path: "/images",
-    component: ImgUpload,
     meta: { title: "图片管理", requiresAuth: true, role: ["admin"] },
     children: [
       {
