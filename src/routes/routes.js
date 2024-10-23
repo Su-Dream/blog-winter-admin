@@ -1,0 +1,98 @@
+import BlogLogin from "@/views/login/blog-Login.vue";
+import BlogHome from "@/views/Home/blog-Home.vue";
+import AccUser from "@/views/account/account_user.vue";
+import AccAdmin from "@/views/account/account_admin.vue";
+import ArtList from "@/views/article/article_list.vue";
+import ArtTags from "@/views/article/article_tags.vue";
+import ArtTypes from "@/views/article/article_types.vue";
+import ImgUpload from "@/views/images/imagesUpload.vue";
+import ImgList from "@/views/images/images.vue";
+import Comments from "@/views/comments/comments.vue";
+import FriendLinks from "@/views/friendLinks/friendLinks.vue";
+import Setting from "@/views/setting/setting.vue";
+
+export const routes = [
+  { path: "/", redirect: "/home" },
+  {
+    path: "/login",
+    component: BlogLogin,
+    meta: { title: "登录", requiresAuth: false },
+  },
+  {
+    path: "/home",
+    component: BlogHome,
+    meta: { title: "首页", requiresAuth: false },
+  },
+  {
+    path: "/account",
+    component: AccUser,
+    meta: { title: "账号管理", requiresAuth: true, role: ["user", "admin"] },
+
+    children: [
+      {
+        path: "user",
+        component: AccUser,
+        meta: { title: "用户", requiresAuth: true, role: ["user", "admin"] },
+      },
+      {
+        path: "admin",
+        component: AccAdmin,
+        meta: { title: "管理员", requiresAuth: true, role: ["admin"] },
+      },
+    ],
+  },
+  {
+    path: "/article",
+    component: ArtList,
+    meta: { title: "文章管理", requiresAuth: true, role: ["admin"] },
+    children: [
+      {
+        path: "list",
+        component: ArtList,
+        meta: { title: "文章列表", requiresAuth: true, role: ["admin"] },
+      },
+      {
+        path: "tags",
+        component: ArtTags,
+        meta: { title: "标签列表", requiresAuth: true, role: ["admin"] },
+      },
+      {
+        path: "types",
+        component: ArtTypes,
+        meta: { title: "分类列表", requiresAuth: true, role: ["admin"] },
+      },
+    ],
+  },
+  {
+    path: "/images",
+    component: ImgUpload,
+    meta: { title: "图片管理", requiresAuth: true, role: ["admin"] },
+    children: [
+      {
+        path: "upload",
+        component: ImgUpload,
+        meta: { title: "图片上传", requiresAuth: true, role: ["admin"] },
+      },
+      {
+        path: "list",
+        component: ImgList,
+        meta: { title: "图片列表", requiresAuth: true, role: ["admin"] },
+      },
+    ],
+  },
+  {
+    path: "/comments",
+    component: Comments,
+    meta: { title: "评论管理", requiresAuth: true, role: ["admin"] },
+  },
+  {
+    path: "/friendLinks",
+    component: FriendLinks,
+    meta: { title: "友链管理", requiresAuth: true, role: ["admin"] },
+  },
+  {
+    path: "/setting",
+    component: Setting,
+    meta: { title: "网站设置", requiresAuth: true, role: ["admin"] },
+  },
+];

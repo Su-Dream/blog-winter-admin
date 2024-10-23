@@ -125,7 +125,6 @@ const tableData = [
 
 <style scoped>
 .blog-table {
-  margin: 20px 0;
   padding: 20px;
   border-radius: 11px;
   background-color: #fff;

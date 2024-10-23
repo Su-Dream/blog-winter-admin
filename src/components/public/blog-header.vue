@@ -9,7 +9,11 @@
       />
     </el-col>
     <el-col :span="12">
-      <el-breadcrumb v-if="route.matched.length !== 1" separator="/">
+      <el-breadcrumb
+        class="breadcrumb"
+        v-if="route.matched.length !== 1"
+        separator="/"
+      >
         <el-breadcrumb-item
           v-for="(item, index) in route.matched"
           :to="{ path: route.matched[index].path }"
@@ -67,6 +71,9 @@ const changeCollapseHandler = obj => {
 </script>
 
 <style scoped>
+.breadcrumb {
+  user-select: none;
+}
 .aside-control .aside-control-btn {
   height: 100%;
   font-size: 16px;

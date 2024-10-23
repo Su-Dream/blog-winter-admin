@@ -42,10 +42,18 @@
           <el-icon><Link /></el-icon>
           <template #title>友链管理</template>
         </el-menu-item>
-        <el-menu-item index="/images">
+        <!-- <el-menu-item index="/images">
           <el-icon><Picture /></el-icon>
           <template #title>图片管理</template>
-        </el-menu-item>
+        </el-menu-item> -->
+        <el-sub-menu index="/images">
+          <template #title>
+            <el-icon><Picture /></el-icon>
+            <span>图片管理</span>
+          </template>
+          <el-menu-item index="/images/upload">图片上传</el-menu-item>
+          <el-menu-item index="/images/list">图片列表</el-menu-item>
+        </el-sub-menu>
         <el-menu-item index="/setting">
           <el-icon><setting /></el-icon>
           <template #title>网站设置</template>
@@ -98,6 +106,7 @@ onBeforeUnmount(() => {
   text-align: center;
 }
 .tac {
+  user-select: none;
   height: 100vh;
 }
 .tac .el-menu-vertical {
