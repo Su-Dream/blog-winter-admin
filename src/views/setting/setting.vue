@@ -1,137 +1,84 @@
 <template>
-  <div class="blog-table">
-    <el-table :data="filterTableData" table-layout="auto" style="width: 100%">
-      <el-table-column label="头像" prop="address" />
-      <el-table-column label="昵称" prop="name" />
-      <el-table-column label="性别" prop="sex" />
-      <el-table-column label="管理员" prop="role">
-        <template #default="scope">
-          <el-switch
-            :inactive-value="0"
-            :active-value="1"
-            v-model="scope.row.role"
-          />
-        </template>
-      </el-table-column>
-      <el-table-column label="封禁" prop="isBan">
-        <template #default="scope">
-          <el-switch
-            :inactive-value="0"
-            :active-value="1"
-            v-model="scope.row.isBan"
-          />
-        </template>
-      </el-table-column>
-      <el-table-column label="注册时间" prop="date" />
-      <el-table-column align="right">
-        <template #header>
-          <el-input v-model="search" placeholder="此处搜索" />
-        </template>
-        <template #default="scope">
-          <div class="edit">
-            <el-link
-              :underline="false"
-              :icon="View"
-              @click="handleEdit(scope.$index, scope.row)"
-              type="primary"
-            >
-              查看详情
-            </el-link>
-            <el-popconfirm
-              title="确认删除这个用户?"
-              @confirm="handleDelete(scope.$index, scope.row)"
-            >
-              <template #reference>
-                <el-link :underline="false" :icon="Delete" type="danger">
-                  删除
-                </el-link>
-              </template>
-            </el-popconfirm>
-          </div>
-        </template>
-      </el-table-column>
-    </el-table>
+  <div class="setting">
+    <div class="top">
+      <div class="title">
+        <h4>网站全局设置</h4>
+      </div>
+      <div class="save_btn">
+        <el-button type="primary">保存</el-button>
+      </div>
+    </div>
+
+    <el-divider />
+    <div class="site_setting">
+      <div
+        class="site_setting_item"
+        v-for="(item, index) in siteSetting"
+        :key="index"
+      >
+        <p class="title">
+          <span class="site_text">网站LOGO文本</span>
+          <el-tooltip
+            class="box-item"
+            effect="dark"
+            content="支持HTML"
+            placement="top"
+          >
+            <span
+              ><el-icon size="16"><InfoFilled /></el-icon
+            ></span>
+          </el-tooltip>
+        </p>
+        <el-input v-model="input" placeholder="Please input" />
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { computed, ref } from "vue";
-import { View, Delete } from "@element-plus/icons-vue";
+import { InfoFilled } from "@element-plus/icons-vue";
+import { reactive } from "vue";
 
-// ?搜索功能
-const search = ref("");
-const filterTableData = computed(() =>
-  tableData.filter(
-    data =>
-      !search.value ||
-      data.name.toLowerCase().includes(search.value.toLowerCase())
-  )
-);
-// ?编辑的回调
-const handleEdit = (index, row) => {
-  console.log(index, row);
-};
-// ?删除的回调
-const handleDelete = (index, row) => {
-  console.log(index, row);
-};
-
-// *表单数据
-const tableData = [
+const siteSetting = reactive([
   {
-    date: "2016-05-03",
-    name: "Tom",
-    sex: "男",
-    isBan: 0,
-    role: 0,
-    address: "No. 189, Grove St, Los Angeles",
+    title: "网站LOGO文本",
+    site_header: "",
+    tips: "",
   },
   {
-    date: "2016-05-02",
-    sex: "男",
-    name: "John",
-    isBan: 0,
-    role: 1,
-
-    address: "No. 189, Grove St, Los Angeles",
+    title: "网站meta文本",
+    site_meta: "",
+    tips: "",
   },
   {
-    date: "2016-05-04",
-    sex: "男",
-    name: "Morgan",
-    isBan: 1,
-    role: 1,
-
-    address: "No. 189, Grove St, Los Angeles",
+    title: "网站footer备案信息",
+    site_footer: "",
+    tips: "",
   },
-  {
-    date: "2016-05-01",
-    sex: "女",
-    isBan: 1,
-    role: 0,
-    name: "Jessy",
-    address: "No. 189, Grove St, Los Angeles",
-  },
-  {
-    date: "2016-05-01",
-    name: "郑嘉明",
-    sex: "男",
-    role: 0,
-    isBan: 0,
-    address: "No. 189, Grove St, Los Angeles",
-  },
-];
+]);
 </script>
 
 <style scoped>
-.blog-table {
-  padding: 20px;
-  border-radius: 11px;
+.setting {
+  padding: 1.5rem;
   background-color: #fff;
+  width: 100%;
 }
-.edit {
+.setting .top {
   display: flex;
-  column-gap: 1.25rem;
-  justify-content: center;
+  justify-content: space-between;
+  align-items: center;
+}
+.setting .site_setting_item {
+  display: flex;
+  flex-flow: column nowrap;
+}
+.site_setting_item .title {
+  margin-top: 1.25rem;
+  margin-bottom: 0.625rem;
+}
+.site_text {
+  font-size: 0.875rem;
+  vertical-align: text-top;
 }
 </style>

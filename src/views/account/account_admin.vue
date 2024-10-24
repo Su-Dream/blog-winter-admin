@@ -59,13 +59,65 @@
       >
         <el-form :model="form">
           <el-form-item label="头像:" :label-width="formLabelWidth">
-            <el-input v-model="form.avatar" autocomplete="off" />
+            <div class="upload">
+              <el-upload
+                action="#"
+                list-type="picture-card"
+                :auto-upload="false"
+              >
+                <el-icon><Plus /></el-icon>
+                <template #file="{ file }">
+                  <div>
+                    <img
+                      class="el-upload-list__item-thumbnail"
+                      :src="file.url"
+                      alt=""
+                    />
+                    <span class="el-upload-list__item-actions">
+                      <span
+                        class="el-upload-list__item-preview"
+                        @click="handlePictureCardPreview(file)"
+                      >
+                        <el-icon><zoom-in /></el-icon>
+                      </span>
+                      <span
+                        v-if="!disabled"
+                        class="el-upload-list__item-delete"
+                        @click="handleDownload(file)"
+                      >
+                        <el-icon><Download /></el-icon>
+                      </span>
+                      <span
+                        v-if="!disabled"
+                        class="el-upload-list__item-delete"
+                        @click="handleRemove(file)"
+                      >
+                        <el-icon><Delete /></el-icon>
+                      </span>
+                    </span>
+                  </div>
+                </template>
+              </el-upload>
+              <el-dialog v-model="dialogVisible">
+                <img w-full :src="dialogImageUrl" alt="Preview Image" />
+              </el-dialog>
+            </div>
+            <!-- <el-input v-model="form.avatar" autocomplete="off" /> -->
           </el-form-item>
           <el-form-item label="昵称:" :label-width="formLabelWidth">
             <el-input v-model="form.name" autocomplete="off" />
           </el-form-item>
           <el-form-item label="性别:" :label-width="formLabelWidth">
-            <el-input v-model="form.sex" autocomplete="off" />
+            <el-select
+              v-model="form.sex"
+              placeholder="Select"
+              style="width: 240px"
+            >
+              <el-option label="保密" value="保密" />
+              <el-option label="男" value="男" />
+              <el-option label="女" value="女" />
+            </el-select>
+            <!-- <el-input v-model="form.sex" autocomplete="off" /> -->
           </el-form-item>
           <el-form-item label="个性签名:" :label-width="formLabelWidth">
             <el-input v-model="form.bio" autocomplete="off" />
@@ -87,8 +139,28 @@
 <script setup>
 import { computed, ref, reactive } from "vue";
 import { View, Delete } from "@element-plus/icons-vue";
+import { Download, Plus, ZoomIn } from "@element-plus/icons-vue";
 
-// !model测试
+// *upload配置
+
+const dialogImageUrl = ref("");
+const dialogVisible = ref(false);
+const disabled = ref(false);
+
+const handleRemove = file => {
+  console.log(file);
+};
+
+const handlePictureCardPreview = file => {
+  dialogImageUrl.value = file.url;
+  dialogVisible.value = true;
+};
+
+const handleDownload = file => {
+  console.log(file);
+};
+
+// *model数据
 const dialogFormVisible = ref(false);
 const formLabelWidth = "140px";
 const form = reactive({
@@ -126,7 +198,7 @@ const handleDelete = (index, row) => {
   console.log(index, row);
 };
 
-// *表单数据
+// *model数据
 const tableData = [
   {
     date: "2016-05-03",
@@ -179,6 +251,10 @@ const tableData = [
 </script>
 
 <style scoped>
+:deep(.el-upload) {
+  width: 6.25rem;
+  height: 6.25rem;
+}
 .blog-table {
   padding: 20px;
   border-radius: 11px;
