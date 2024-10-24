@@ -22,9 +22,19 @@
       </el-breadcrumb>
     </el-col>
     <el-col :offset="9" :span="1">
-      <div class="demo-basic--circle">
+      <div class="basic--circle">
         <div class="block">
-          <el-avatar :size="40" :src="circleUrl" />
+          <el-tooltip placement="bottom" effect="light">
+            <template #content>
+              <div class="user-info">
+                <el-button plain>个人信息</el-button>
+                <el-button plain>Gitee</el-button>
+                <el-button plain>GitHub</el-button>
+                <el-button plain>退出登录</el-button>
+              </div>
+            </template>
+            <el-avatar :size="40" :src="circleUrl" />
+          </el-tooltip>
         </div>
       </div>
     </el-col>
@@ -65,9 +75,26 @@ const changeCollapseHandler = obj => {
 </script>
 
 <style scoped>
+/* 面包屑禁止选中文字 */
 .breadcrumb {
   user-select: none;
 }
+/* avatar处用户样式 */
+.user-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  row-gap: 8px;
+}
+.el-button {
+  width: 100px;
+}
+/* 取消el-button默认的margin-left */
+.el-button + .el-button {
+  margin-left: 0;
+}
+
 .aside-control .aside-control-btn {
   height: 100%;
   font-size: 16px;
@@ -82,7 +109,6 @@ const changeCollapseHandler = obj => {
 .el-col {
   border-radius: 4px;
 }
-
 .grid-content {
   border-radius: 4px;
   min-height: 36px;
