@@ -87,11 +87,11 @@ const changeCollapseHandler = obj => {
   align-items: center;
   row-gap: 8px;
 }
-.el-button {
+.user-info .el-button {
   width: 100px;
 }
 /* 取消el-button默认的margin-left */
-.el-button + .el-button {
+.user-info .el-button + .el-button {
   margin-left: 0;
 }
 
