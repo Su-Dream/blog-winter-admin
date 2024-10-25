@@ -29,7 +29,7 @@ router.beforeEach((to, from, next) => {
   }
   // 检查用户是否有访问该页面的权限
   if (to.meta.role && !to.meta.role.includes(ROLE)) {
-    return next("/401"); // 如果用户权限不足，重定向到401
+    return next("/login"); // 如果用户权限不足，重定向到401
   }
 
   next();

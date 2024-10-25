@@ -1,5 +1,10 @@
-<template></template>
+<template>
+  <div class="art_list"></div>
+</template>
 
 <script setup></script>
 
-<style lang="less" scoped></style>
+<style scoped>
+.art_list {
+}
+</style>

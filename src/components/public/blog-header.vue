@@ -30,7 +30,7 @@
                 <el-button plain>个人信息</el-button>
                 <el-button plain>Gitee</el-button>
                 <el-button plain>GitHub</el-button>
-                <el-button plain>退出登录</el-button>
+                <el-button @click="loginOut" plain>退出登录</el-button>
               </div>
             </template>
             <el-avatar :size="40" :src="circleUrl" />
@@ -45,13 +45,28 @@
 import { Grid, HomeFilled, Menu } from "@element-plus/icons-vue";
 import { reactive, markRaw, ref, toRefs } from "vue";
 import { useRoute } from "vue-router";
+import { useUserStore } from "../../stores/user";
+import router from "@/routes";
 const route = useRoute();
+
 const state = reactive({
   circleUrl:
     "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
   sizeList: ["small", "", "large"],
 });
 const { circleUrl } = toRefs(state);
+
+// ?登出操作
+const loginOut = () => {
+  const userStore = useUserStore();
+  userStore.setRole("");
+  ElMessage({
+    message: "登出成功!",
+    type: "info",
+    plain: true,
+  });
+  router.push("/login");
+};
 
 // ?:点击切换侧边栏
 

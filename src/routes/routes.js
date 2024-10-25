@@ -12,7 +12,7 @@ import FriendLinks from "@/views/friendLinks/friendLinks.vue";
 import Setting from "@/views/setting/setting.vue";
 
 export const routes = [
-  { path: "/", redirect: "/home" },
+  { path: "/", redirect: "/login" },
   {
     path: "/login",
     component: BlogLogin,
@@ -21,7 +21,7 @@ export const routes = [
   {
     path: "/home",
     component: BlogHome,
-    meta: { title: "首页", requiresAuth: false },
+    meta: { title: "首页", requiresAuth: false, role: ["user", "admin"] },
   },
   {
     path: "/account",
