@@ -113,7 +113,6 @@ const artTagsList = [
 .art_tags {
   padding: 1rem;
   width: 100%;
-  height: 500px;
   background-color: #fff;
 }
 .edit {
