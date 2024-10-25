@@ -9,7 +9,7 @@
       </el-input>
     </div>
     <el-divider />
-    <div class="art_add_tag">
+    <div class="art_add_type">
       <el-button type="primary" @click="dialogVisible = true">
         添加分类
       </el-button>
@@ -21,7 +21,7 @@
         <template #footer>
           <div class="dialog-footer">
             <el-button @click="dialogVisible = false">Cancel</el-button>
-            <el-button type="primary" @click="addArtTag()"> OK </el-button>
+            <el-button type="primary" @click="addArtType()"> OK </el-button>
           </div>
         </template>
       </el-dialog>
@@ -62,13 +62,13 @@ const search = ref("");
 const typeName = ref("");
 const dialogVisible = ref(false);
 // ?添加分类
-const addArtTag = () => {
+const addArtType = () => {
   if (typeName.value === "") {
     return;
   }
   dialogVisible.value = false;
   // todo:发送请求添加分类
-  console.log("addArtTag");
+  console.log("addArtType");
 
   // !添加完成后将分类清空
   typeName.value = "";

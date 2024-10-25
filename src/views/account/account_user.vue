@@ -138,7 +138,8 @@
 
 <script setup>
 import { computed, ref, reactive } from "vue";
-import { View, Delete, Download, Plus, ZoomIn } from "@element-plus/icons-vue";
+import { View, Delete } from "@element-plus/icons-vue";
+import { Download, Plus, ZoomIn } from "@element-plus/icons-vue";
 
 // *upload配置
 
@@ -173,9 +174,9 @@ const form = reactive({
 const search = ref("");
 const filterTableData = computed(() =>
   tableData.filter(
-    user =>
+    data =>
       !search.value ||
-      user.name.toLowerCase().includes(search.value.toLowerCase())
+      data.name.toLowerCase().includes(search.value.toLowerCase())
   )
 );
 // ?编辑的回调
