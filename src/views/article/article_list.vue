@@ -11,11 +11,11 @@
         <el-button type="primary" @click="addArtVisible = true">
           发布文章
         </el-button>
-        <el-dialog v-model="addArtVisible" title="新增文章" width="500">
-          <el-form-item label="文章名称:">
-            <el-input v-model="artName" placeholder="请输入需要添加的文章名">
-            </el-input>
-          </el-form-item>
+        <el-dialog v-model="addArtVisible" title="新增文章">
+          <!-- todo:添加文章 -->
+          <div class="editText">
+            <editText />
+          </div>
           <template #footer>
             <div class="dialog-footer">
               <el-button @click="addArtVisible = false">Cancel</el-button>
@@ -129,12 +129,13 @@
 
 <script setup>
 import { ref, reactive } from "vue";
-import { View, Delete, Plus, ZoomIn } from "@element-plus/icons-vue";
+import { View, Delete, Plus } from "@element-plus/icons-vue";
+import editText from "@/components/edit/editText.vue";
 
 const search = ref("");
 const artName = ref("");
-const addArtVisible = ref(false);
-const disabled = ref(false);
+// *添加文章弹窗显示
+const addArtVisible = ref(true);
 
 // *upload配置参数
 const dialogImageUrl = ref("");
