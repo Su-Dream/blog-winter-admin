@@ -1,5 +1,6 @@
 <template>
   <MdEditor v-model="state.text" :previewTheme="state.theme" />
+  <!-- 纯预览组件 -->
   <!-- <MdPreview v-model="state.text" :previewTheme="state.theme" /> -->
 </template>
 

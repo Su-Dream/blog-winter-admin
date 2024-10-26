@@ -13,8 +13,49 @@
         </el-button>
         <el-dialog v-model="addArtVisible" title="新增文章">
           <!-- todo:添加文章 -->
-          <div class="editText">
-            <editText />
+          <div class="addArt">
+            <el-form-item label="标题:">
+              <el-input v-model="artData.title" placeholder="请输入标题">
+              </el-input>
+            </el-form-item>
+            <el-form-item label="标签:">
+              <el-select
+                v-model="artData.selectedTags"
+                multiple
+                :multiple-limit="3"
+                :max-collapse-tags="1"
+                placeholder="Select"
+                style="width: 400px"
+              >
+                <el-option
+                  v-for="item in artData.tags"
+                  :key="item.id"
+                  :label="item.tagName"
+                  :value="item.tagName"
+                />
+              </el-select>
+            </el-form-item>
+            <el-form-item label="分类:">
+              <el-select
+                v-model="artData.selectedType"
+                placeholder="Select"
+                style="width: 240px"
+              >
+                <el-option
+                  v-for="item in artData.types"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.name"
+                />
+              </el-select>
+            </el-form-item>
+            <!-- todo:上传预览图 -->
+            <el-form-item label="内容:">
+              <!-- 富文本编辑器 -->
+              <div class="editText">
+                <editText />
+              </div>
+            </el-form-item>
           </div>
           <template #footer>
             <div class="dialog-footer">
@@ -132,8 +173,91 @@ import { ref, reactive } from "vue";
 import { View, Delete, Plus } from "@element-plus/icons-vue";
 import editText from "@/components/edit/editText.vue";
 
+// *文章数据
+const artData = reactive({
+  title: "",
+  tags: [
+    {
+      id: 12,
+      createTime: "2024-10-16T09:21:19.322Z",
+      updatedTime: "2024-10-16T09:21:19.322Z",
+      deleteAt: null,
+      tagName: "docker",
+      byNum: 0,
+    },
+    {
+      id: 11,
+      createTime: "2024-10-16T09:21:16.878Z",
+      updatedTime: "2024-10-16T09:21:16.878Z",
+      deleteAt: null,
+      tagName: "java",
+      byNum: 0,
+    },
+    {
+      id: 10,
+      createTime: "2024-10-16T09:21:14.904Z",
+      updatedTime: "2024-10-16T09:21:14.904Z",
+      deleteAt: null,
+      tagName: "nginx",
+      byNum: 0,
+    },
+    {
+      id: 9,
+      createTime: "2024-10-16T09:21:11.550Z",
+      updatedTime: "2024-10-16T09:23:45.000Z",
+      deleteAt: null,
+      tagName: "nodejs",
+      byNum: 1,
+    },
+    {
+      id: 8,
+      createTime: "2024-10-16T09:21:08.644Z",
+      updatedTime: "2024-10-16T09:23:45.000Z",
+      deleteAt: null,
+      tagName: "javascript",
+      byNum: 1,
+    },
+  ],
+  types: [
+    {
+      id: 11,
+      createTime: "2024-10-16T09:17:43.000Z",
+      updatedTime: "2024-10-16T09:17:43.000Z",
+      deleteAt: null,
+      name: "其他",
+    },
+    {
+      id: 10,
+      createTime: "2024-10-16T09:17:43.000Z",
+      updatedTime: "2024-10-16T09:17:43.000Z",
+      deleteAt: null,
+      name: "运维",
+    },
+    {
+      id: 9,
+      createTime: "2024-10-16T09:17:24.000Z",
+      updatedTime: "2024-10-16T09:17:24.000Z",
+      deleteAt: null,
+      name: "后端",
+    },
+    {
+      id: 8,
+      createTime: "2024-10-16T09:17:24.000Z",
+      updatedTime: "2024-10-16T09:17:24.000Z",
+      deleteAt: null,
+      name: "前端",
+    },
+  ],
+  pictrue: "",
+  // *文章摘要
+  snippet: "",
+  // *文章内容
+  content: "",
+  selectedTags: [], // 选中的标签
+  selectedType: [], // 选中的类型
+});
+
 const search = ref("");
-const artName = ref("");
 // *添加文章弹窗显示
 const addArtVisible = ref(true);
 
@@ -159,15 +283,6 @@ const handlePictureCardPreview = uploadFile => {
 
 // ?添加文章
 const addArtHandler = () => {
-  if (artName.value === "") {
-    addArtVisible.value = false;
-    return;
-  }
-  // todo:发送请求添加文章
-  console.log("addArt");
-
-  // !添加完成后将文章清空
-  artName.value = "";
   addArtVisible.value = false;
 };
 
