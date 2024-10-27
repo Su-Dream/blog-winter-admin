@@ -4,7 +4,7 @@
       <el-select
         v-model="filterValue"
         placeholder="Select"
-        style="width: 100px"
+        style="width: 100px; margin-right: 8px"
       >
         <el-option
           v-for="item in options"

@@ -1,10 +1,22 @@
 <template>
   <div class="comment">
     <div class="comment_search">
+      <el-select
+        v-model="filterValue"
+        placeholder="Select"
+        style="width: 100px; margin-right: 8px"
+      >
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        />
+      </el-select>
       <el-input
         style="width: 240px"
         v-model="search"
-        placeholder="请输入需要查询的评论内容"
+        :placeholder="'请输入需要查询的' + filterValue"
       >
       </el-input>
     </div>
@@ -59,13 +71,26 @@ const handleDelete = (index, row) => {
 };
 // *过滤列表
 const search = ref("");
-const filterCommentList = computed(() =>
-  commentList.filter(
-    data =>
-      !search.value ||
-      data.content.toLowerCase().includes(search.value.toLowerCase())
-  )
-);
+// *下拉框数据相关
+const filterValue = ref("评论人");
+const options = [
+  { value: "评论人", label: "评论人" },
+  { value: "评论内容", label: "评论内容" },
+];
+const filterCommentList = computed(() => {
+  return commentList.filter(data => {
+    if (!search.value) return commentList; // 如果没有搜索值，返回所有数据
+    if (filterValue.value === "评论人") {
+      return data.user.account
+        .toLowerCase()
+        .includes(search.value.toLowerCase());
+    }
+    if (filterValue.value === "评论内容") {
+      return data.content.toLowerCase().includes(search.value.toLowerCase());
+    }
+    return false; // 其他情况不返回任何数据
+  });
+});
 // *评论列表
 const commentList = reactive([
   {
@@ -80,7 +105,7 @@ const commentList = reactive([
       createTime: "2024-10-16T09:18:44.985Z",
       updatedTime: "2024-10-22T07:18:54.000Z",
       deleteAt: null,
-      account: "hoiolo",
+      account: "admin",
       email: "1805639380@qq.com",
       sign_time: "2024-10-16T09:18:44.985Z",
       role: 3,
