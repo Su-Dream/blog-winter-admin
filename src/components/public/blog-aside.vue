@@ -1,5 +1,5 @@
 <template>
-  <el-row class="tac">
+  <el-row class="tac" :class="isCollapse === false ? 'tacWidth' : ''">
     <el-col>
       <el-menu
         :router="true"
@@ -104,6 +104,9 @@ onBeforeUnmount(() => {
   color: #ffffffa8;
   padding: 20px 10px;
   text-align: center;
+}
+.tacWidth {
+  width: 12.5rem;
 }
 .tac {
   user-select: none;
