@@ -4,13 +4,13 @@
       <el-input
         style="width: 240px"
         v-model="search"
-        placeholder="请输入需要查询的评论名"
+        placeholder="请输入需要查询的评论内容"
       >
       </el-input>
     </div>
     <el-divider />
     <div class="comment_list">
-      <el-table size="large" :data="commentList" style="width: 100%">
+      <el-table size="large" :data="filterCommentList" style="width: 100%">
         <el-table-column prop="user.profile.avatar" label="用户头像">
         </el-table-column>
         <el-table-column prop="user.account" label="评论人"> </el-table-column>
@@ -50,16 +50,24 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { reactive, ref, computed } from "vue";
 import { Edit, Delete } from "@element-plus/icons-vue";
-const search = ref("");
 
 // ?删除评论
 const handleDelete = (index, row) => {
   console.log(index, row);
 };
+// *过滤列表
+const search = ref("");
+const filterCommentList = computed(() =>
+  commentList.filter(
+    data =>
+      !search.value ||
+      data.content.toLowerCase().includes(search.value.toLowerCase())
+  )
+);
 // *评论列表
-const commentList = [
+const commentList = reactive([
   {
     id: 4,
     createTime: "2024-10-27T06:02:35.539Z",
@@ -209,7 +217,7 @@ const commentList = [
       },
     },
   },
-];
+]);
 </script>
 
 <style scoped>

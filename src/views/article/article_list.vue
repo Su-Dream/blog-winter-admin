@@ -1,10 +1,22 @@
 <template>
   <div class="art_list">
     <div class="art_list_search">
+      <el-select
+        v-model="filterValue"
+        placeholder="Select"
+        style="width: 100px"
+      >
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        />
+      </el-select>
       <el-input
         style="width: 240px"
         v-model="search"
-        placeholder="请输入需要查询的文章名"
+        :placeholder="'请输入需要查询的' + filterValue"
       >
       </el-input>
       <div class="art_add_list">
@@ -88,7 +100,7 @@
       <span>已发布文章</span>
     </el-divider>
     <div class="art_table_list">
-      <el-table :data="tableData" table-layout="auto" style="width: 100%">
+      <el-table :data="filterTableData" table-layout="auto" style="width: 100%">
         <el-table-column label="预览图" prop="pictrue" />
         <el-table-column label="文章名称" prop="art_name" />
         <el-table-column label="分类" prop="type" />
@@ -185,9 +197,15 @@
 </template>
 
 <script setup>
-import { ref, reactive } from "vue";
+import { ref, reactive, computed } from "vue";
 import { View, Delete, Plus } from "@element-plus/icons-vue";
 import editText from "@/components/edit/editText.vue";
+// *下拉框数据相关
+const filterValue = ref("文章名");
+const options = [
+  { value: "文章名", label: "文章名" },
+  { value: "分类名", label: "分类名" },
+];
 
 // *文章数据
 const artData = reactive({
@@ -274,6 +292,20 @@ const artData = reactive({
 });
 
 const search = ref("");
+const filterTableData = computed(() => {
+  // console.log("Filter Value:", filterValue.value);
+  // console.log("Search Value:", search.value);
+  return tableData.filter(data => {
+    if (!search.value) return tableData; // 如果没有搜索值，返回所有数据
+    if (filterValue.value === "文章名") {
+      return data.art_name.toLowerCase().includes(search.value.toLowerCase());
+    }
+    if (filterValue.value === "分类名") {
+      return data.type.toLowerCase().includes(search.value.toLowerCase());
+    }
+    return false; // 其他情况不返回任何数据
+  });
+});
 // *添加文章弹窗显示
 const addArtVisible = ref(false);
 
@@ -386,7 +418,10 @@ const tableData = [
 }
 .art_list_search {
   display: flex;
-  justify-content: space-between;
+  justify-content: start;
+}
+.art_add_list {
+  margin-left: auto;
 }
 .edit {
   display: flex;
