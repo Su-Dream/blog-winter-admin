@@ -16,7 +16,8 @@ const state = reactive({
 </script>
 
 <style scoped>
-:deep(.md-editor-toolbar) {
+:deep(.md-editor-toolbar),
+:deep(.md-editor-toolbar-left) {
   flex-wrap: wrap;
 }
 </style>

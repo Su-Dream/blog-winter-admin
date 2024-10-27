@@ -11,7 +11,7 @@
         <el-button type="primary" @click="addArtVisible = true">
           发布文章
         </el-button>
-        <el-dialog v-model="addArtVisible" title="新增文章">
+        <el-dialog width="70%" v-model="addArtVisible" title="新增文章">
           <!-- todo:添加文章 -->
           <div class="addArt">
             <el-form-item label="标题:">
@@ -50,6 +50,22 @@
               </el-select>
             </el-form-item>
             <!-- todo:上传预览图 -->
+            <el-form-item label="预览图:" :label-width="formLabelWidth">
+              <el-upload
+                v-model:file-list="fileList"
+                action="#"
+                :limit="1"
+                list-type="picture-card"
+                :on-preview="handlePictureCardPreview"
+                :on-remove="handleRemove"
+              >
+                <el-icon><Plus /></el-icon>
+              </el-upload>
+
+              <el-dialog v-model="dialogVisible">
+                <img w-full :src="dialogImageUrl" alt="Preview Image" />
+              </el-dialog>
+            </el-form-item>
             <el-form-item label="内容:">
               <!-- 富文本编辑器 -->
               <div class="editText">
@@ -248,7 +264,7 @@ const artData = reactive({
       name: "前端",
     },
   ],
-  pictrue: "",
+  pictrue: null,
   // *文章摘要
   snippet: "",
   // *文章内容
@@ -259,7 +275,7 @@ const artData = reactive({
 
 const search = ref("");
 // *添加文章弹窗显示
-const addArtVisible = ref(true);
+const addArtVisible = ref(flase);
 
 // *upload配置参数
 const dialogImageUrl = ref("");
@@ -275,6 +291,7 @@ const fileList = ref([
 
 const handleRemove = (uploadFile, uploadFiles) => {
   console.log(uploadFile, uploadFiles);
+  dialogImageUrl.value = "";
 };
 const handlePictureCardPreview = uploadFile => {
   dialogImageUrl.value = uploadFile.url;
@@ -309,7 +326,7 @@ const handleDelete = (index, row) => {
 // *model数据
 const dialogFormVisible = ref(false);
 const formLabelWidth = "140px";
-// *表单数据
+// *个人资料表单数据
 const form = reactive({
   pictrue: "",
   art_name: "",
