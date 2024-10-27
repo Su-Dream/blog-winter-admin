@@ -275,7 +275,7 @@ const artData = reactive({
 
 const search = ref("");
 // *添加文章弹窗显示
-const addArtVisible = ref(flase);
+const addArtVisible = ref(false);
 
 // *upload配置参数
 const dialogImageUrl = ref("");
