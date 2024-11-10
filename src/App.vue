@@ -1,14 +1,16 @@
 <script setup>
-import { useUserStore } from "./stores/user";
+import { useAuthStore } from "./stores/user";
 import blogAside from "./components/public/blog-aside.vue";
 import blogHeader from "./components/public/blog-header.vue";
 import blogHome from "./views/Home/blog-Home.vue";
 import blogLogin from "./views/login/blog-Login.vue";
 import { computed } from "vue";
+import { decodeToken } from "@/utils/jwt";
+const result = decodeToken();
 
-const userStore = useUserStore();
+const userStore = useAuthStore();
 const isLoggedIn = computed(() => {
-  return userStore.role !== "" ? true : false;
+  return userStore.token !== "" ? true : false;
 });
 </script>
 

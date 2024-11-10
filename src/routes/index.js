@@ -4,8 +4,7 @@ import {
   createRouter,
 } from "vue-router";
 import { routes } from "./routes";
-
-import { useUserStore } from "../stores/user";
+import { decodeToken } from "../utils/jwt";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -13,10 +12,19 @@ const router = createRouter({
 });
 // 添加全局前置守卫，检查用户是否已登录
 router.beforeEach((to, from, next) => {
-  const userStore = useUserStore();
+  const result = decodeToken();
+
+  let ROLE;
+  if (result && result.role == 1) {
+    ROLE = "admin";
+  }
+  if (result && result.role == 0) {
+    ROLE = "user";
+  }
   const AuthList = ["user", "admin"];
-  const ROLE = userStore.role;
+
   const isLoggedIn = AuthList.indexOf(ROLE) !== -1;
+  console.log(ROLE);
 
   // 如果用户未登录且尝试访问需要授权的页面，重定向到登录页面
   if (!isLoggedIn && to.meta.requiresAuth) {

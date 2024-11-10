@@ -10,10 +10,12 @@
   },
   "dependencies": {
     "@wangeditor/editor-for-vue": "^5.1.12",
+    "axios": "^1.7.7",
     "crypto-js": "^4.2.0",
     "echarts": "^5.5.1",
     "element-plus": "^2.8.6",
     "js-cookie": "^3.0.5",
+    "jwt-decode": "^4.0.0",
     "md-editor-v3": "^4.21.1",
     "mitt": "^3.0.1",
     "pinia": "^2.2.4",

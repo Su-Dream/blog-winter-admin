@@ -65,8 +65,9 @@
 import { reactive, ref, onMounted } from "vue";
 import { setUserCookie, getUserCookie, clearUserCookie } from "@/utils/auth.js";
 import { ElMessage } from "element-plus";
-import { useUserStore } from "../../stores/user";
+import { useAuthStore } from "@/stores/user.js";
 import router from "@/routes";
+import apiClient from "@/apis/index.js";
 onMounted(() => {
   getCookieForm();
 });
@@ -105,7 +106,7 @@ const rules = reactive({
   pass: [{ validator: validatePass2, trigger: "blur" }],
 });
 //* 登录逻辑
-const submitHandler = () => {
+const submitHandler = async () => {
   // ?保存密码操作
   if (savePwd.value) {
     setUserCookie(ruleForm.usnm, ruleForm.pass, 7); // 记住密码
@@ -113,30 +114,46 @@ const submitHandler = () => {
     clearUserCookie();
   }
   // todo:发送请求拿到用户信息
-  const userStore = useUserStore();
+  // 构建用户信息
+  const userInfo = {
+    username: ruleForm.usnm,
+    password: ruleForm.pass,
+  };
+  // 发送请求拿到结果
+  const result = await apiClient.post("/user/login", userInfo);
+  if (result.code !== 1001) {
+    ElMessage({
+      message: result.message,
+      type: "error",
+    });
+  } else {
+    ElMessage({
+      message: "登录成功!正在跳转页面...",
+      type: "success",
+    });
+  }
+
+  const { token } = result.data;
+  const userStore = useAuthStore();
   // 判断是不是管理员用户
   if (true) {
-    userStore.setRole("admin");
+    userStore.setToken(token);
   }
   // 跳转到仪表盘
-  console.log(`登录成功，设置用户权限${userStore.role}`);
+  console.log(`登录成功，设置用户权限${userStore.token}`);
 
   router.push("/home");
 };
 //* 提交操作
 const submitForm = formEl => {
+  console.log(formEl);
+
   if (!formEl) return;
   formEl.validate(valid => {
     if (valid) {
       //? 登录逻辑
       console.log("submit!");
       submitHandler();
-
-      //! 此处应该处理完所有登录逻辑
-      ElMessage({
-        message: "登录成功!正在跳转页面...",
-        type: "success",
-      });
     } else {
       ElMessage({
         message: "登录失败,请检查表单信息",

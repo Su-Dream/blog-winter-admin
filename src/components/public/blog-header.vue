@@ -45,7 +45,7 @@
 import { Grid, HomeFilled, Menu } from "@element-plus/icons-vue";
 import { reactive, markRaw, ref, toRefs } from "vue";
 import { useRoute } from "vue-router";
-import { useUserStore } from "../../stores/user";
+import { useAuthStore } from "@/stores/user";
 import router from "@/routes";
 const route = useRoute();
 
@@ -58,8 +58,8 @@ const { circleUrl } = toRefs(state);
 
 // ?登出操作
 const loginOut = () => {
-  const userStore = useUserStore();
-  userStore.setRole("");
+  const userStore = useAuthStore();
+  userStore.setToken("");
   ElMessage({
     message: "登出成功!",
     type: "info",
