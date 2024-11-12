@@ -2,7 +2,12 @@ import apiCilent from "../apiClient";
 
 /**
  * - 注册接口
- * @param {Object} data - 传入对象{username,password,email,code}
+ * @param {Object} data - 传入对象
+ * @param {String} data.username - 用户名
+ * @param {String} data.password - 密码
+ * @param {String} data.email - 邮箱
+ * @param {String} data.code - 邮箱验证码
+ *
  */
 const register = data => {
   return apiCilent.post("/user/register", data);
@@ -10,7 +15,9 @@ const register = data => {
 
 /**
  * - 登录接口
- * @param {Object} data - 传入对象{username,password}
+ * @param {Object} data - 传入对象
+ * @param {String} data.username - 用户名
+ * @param {String} data.password - 密码
  */
 const login = data => {
   return apiCilent.post("/user/login", data);
