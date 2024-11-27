@@ -113,7 +113,7 @@ const submitHandler = async () => {
   } else {
     clearUserCookie();
   }
-  // todo:发送请求拿到用户信息
+  //? 发送请求拿到用户信息
   // 构建用户信息
   const userInfo = {
     username: ruleForm.usnm,
@@ -121,24 +121,21 @@ const submitHandler = async () => {
   };
   // 发送请求拿到结果
   const result = await apiClient.post("/user/login", userInfo);
+  const userStore = useAuthStore();
   if (result.code !== 1001) {
-    ElMessage({
+    return ElMessage({
       message: result.message,
       type: "error",
     });
   } else {
+    const { token } = result.data;
+    userStore.setToken(token);
     ElMessage({
       message: "登录成功!正在跳转页面...",
       type: "success",
     });
   }
 
-  const { token } = result.data;
-  const userStore = useAuthStore();
-  // 判断是不是管理员用户
-  if (true) {
-    userStore.setToken(token);
-  }
   // 跳转到仪表盘
   console.log(`登录成功，设置用户权限${userStore.token}`);
 

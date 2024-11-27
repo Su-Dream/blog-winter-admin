@@ -4,7 +4,8 @@ import {
   createRouter,
 } from "vue-router";
 import { routes } from "./routes";
-import { decodeToken } from "../utils/jwt";
+import { decodeToken, validataToken } from "../utils/jwt";
+import { useAuthStore } from "@/stores/user";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -12,8 +13,14 @@ const router = createRouter({
 });
 // 添加全局前置守卫，检查用户是否已登录
 router.beforeEach((to, from, next) => {
+  const userStore = useAuthStore();
+  const isToken = validataToken();
+  console.log("isToken", isToken);
+  if (!isToken && to.path !== "/login") {
+    userStore.removeToken();
+    return next("/login"); // 重定向到登录页
+  }
   const result = decodeToken();
-
   let ROLE;
   if (result && result.role == 1) {
     ROLE = "admin";
@@ -41,11 +48,6 @@ router.beforeEach((to, from, next) => {
   }
 
   next();
-});
-
-// 全局解析守卫，监控用户登录态
-router.beforeResolve(async to => {
-  // console.log(to);
 });
 
 export default router;

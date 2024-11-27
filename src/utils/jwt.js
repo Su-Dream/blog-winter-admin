@@ -22,4 +22,26 @@ function decodeToken() {
     }
   }
 }
-export { decodeToken };
+/**
+ * 验证token是否有效
+ * @returns {Boolean} - token是否有效
+ */
+function validataToken() {
+  const userStore = useAuthStore();
+  const token = userStore.token;
+  if (!token) {
+    console.log("未在pinia中获取到token");
+    return false;
+  }
+  const result = decodeToken(token);
+  const validata = result.exp >= Math.floor(Date.now() / 1000);
+  if (validata) {
+    console.log("token有效");
+    return true;
+  } else {
+    console.log(token);
+    console.log("token无效");
+    return false;
+  }
+}
+export { decodeToken, validataToken };
