@@ -30,7 +30,7 @@
       <el-table size="large" :data="artTypeList" style="width: 100%">
         <el-table-column prop="name" label="分类名称"> </el-table-column>
         <el-table-column
-          prop="createDate"
+          prop="createdAt"
           sortable
           label="创建时间"
         ></el-table-column>
@@ -56,45 +56,44 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, reactive } from "vue";
 import { Edit, Delete } from "@element-plus/icons-vue";
+import typeApi from "@/apis/types.js";
+import { ElMessage } from "element-plus";
 const search = ref("");
 const typeName = ref("");
 const dialogVisible = ref(false);
 // ?添加分类
-const addArtType = () => {
-  if (typeName.value === "") {
+const addArtType = async () => {
+  if (!typeName.value) {
+    ElMessage("分类内容呢？");
     return;
   }
   dialogVisible.value = false;
-  // todo:发送请求添加分类
-  console.log("addArtType");
-
-  // !添加完成后将分类清空
+  // 发送请求添加分类
+  const result = await typeApi.addTypes(typeName.value);
+  console.log("addType", result);
+  // 添加完成后将分类清空然后刷新列表
+  get_type_list();
   typeName.value = "";
 };
 // ?删除分类
-const handleDelete = (index, row) => {
-  console.log(index, row);
+const handleDelete = async (index, row) => {
+  console.log(row.id);
+  const result = await typeApi.delTypes(row.id);
+  console.log(result);
+  ElMessage("删除成功了捏");
+  get_type_list();
 };
 // *分类列表
-const artTypeList = [
-  {
-    id: 1,
-    name: "web",
-    createDate: "2023-06-01",
-  },
-  {
-    id: 2,
-    name: "java",
-    createDate: "2023-01-21",
-  },
-  {
-    id: 3,
-    name: "node",
-    createDate: "2024-09-25",
-  },
-];
+let artTypeList = ref([]);
+// ?获取分类列表
+const get_type_list = async () => {
+  const result = await typeApi.getTypes();
+  console.log(result.data);
+  artTypeList.value = result.data.rows;
+};
+get_type_list();
 </script>
 
 <style scoped>

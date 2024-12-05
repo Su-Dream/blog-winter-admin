@@ -207,7 +207,7 @@ const options = [
   { value: "分类名", label: "分类名" },
 ];
 
-// *文章数据
+// *文章请求数据
 const artData = reactive({
   title: "",
   tags: [
