@@ -40,10 +40,10 @@
                 style="width: 400px"
               >
                 <el-option
-                  v-for="item in artData.tags"
+                  v-for="item in tags"
                   :key="item.id"
-                  :label="item.tagName"
-                  :value="item.tagName"
+                  :label="item.name"
+                  :value="item.name"
                 />
               </el-select>
             </el-form-item>
@@ -54,7 +54,7 @@
                 style="width: 240px"
               >
                 <el-option
-                  v-for="item in artData.types"
+                  v-for="item in types"
                   :key="item.id"
                   :label="item.name"
                   :value="item.name"
@@ -81,7 +81,7 @@
             <el-form-item label="内容:">
               <!-- 富文本编辑器 -->
               <div class="editText">
-                <editText />
+                <editText @send_edit_content="getSonValue" />
               </div>
             </el-form-item>
           </div>
@@ -200,88 +200,36 @@
 import { ref, reactive, computed } from "vue";
 import { View, Delete, Plus } from "@element-plus/icons-vue";
 import editText from "@/components/edit/editText.vue";
+import tagApi from "@/apis/tags.js";
+import typeApi from "@/apis/types.js";
 // *下拉框数据相关
 const filterValue = ref("文章名");
 const options = [
   { value: "文章名", label: "文章名" },
   { value: "分类名", label: "分类名" },
 ];
-
+const tags = ref([]);
+const types = ref([]);
+/**
+ * 初始化内容
+ */
+const init = async () => {
+  const res = await tagApi.getTags();
+  const res2 = await typeApi.getTypes();
+  tags.value = res.data.tags;
+  types.value = res2.data.rows;
+  console.log(tags.value, types.value);
+};
+init();
+/**
+ * 获取编辑器内容
+ */
+const getSonValue = sonValue => {
+  artData.content = sonValue;
+};
 // *文章请求数据
 const artData = reactive({
   title: "",
-  tags: [
-    {
-      id: 12,
-      createTime: "2024-10-16T09:21:19.322Z",
-      updatedTime: "2024-10-16T09:21:19.322Z",
-      deleteAt: null,
-      tagName: "docker",
-      byNum: 0,
-    },
-    {
-      id: 11,
-      createTime: "2024-10-16T09:21:16.878Z",
-      updatedTime: "2024-10-16T09:21:16.878Z",
-      deleteAt: null,
-      tagName: "java",
-      byNum: 0,
-    },
-    {
-      id: 10,
-      createTime: "2024-10-16T09:21:14.904Z",
-      updatedTime: "2024-10-16T09:21:14.904Z",
-      deleteAt: null,
-      tagName: "nginx",
-      byNum: 0,
-    },
-    {
-      id: 9,
-      createTime: "2024-10-16T09:21:11.550Z",
-      updatedTime: "2024-10-16T09:23:45.000Z",
-      deleteAt: null,
-      tagName: "nodejs",
-      byNum: 1,
-    },
-    {
-      id: 8,
-      createTime: "2024-10-16T09:21:08.644Z",
-      updatedTime: "2024-10-16T09:23:45.000Z",
-      deleteAt: null,
-      tagName: "javascript",
-      byNum: 1,
-    },
-  ],
-  types: [
-    {
-      id: 11,
-      createTime: "2024-10-16T09:17:43.000Z",
-      updatedTime: "2024-10-16T09:17:43.000Z",
-      deleteAt: null,
-      name: "其他",
-    },
-    {
-      id: 10,
-      createTime: "2024-10-16T09:17:43.000Z",
-      updatedTime: "2024-10-16T09:17:43.000Z",
-      deleteAt: null,
-      name: "运维",
-    },
-    {
-      id: 9,
-      createTime: "2024-10-16T09:17:24.000Z",
-      updatedTime: "2024-10-16T09:17:24.000Z",
-      deleteAt: null,
-      name: "后端",
-    },
-    {
-      id: 8,
-      createTime: "2024-10-16T09:17:24.000Z",
-      updatedTime: "2024-10-16T09:17:24.000Z",
-      deleteAt: null,
-      name: "前端",
-    },
-  ],
   pictrue: null,
   // *文章摘要
   snippet: "",
@@ -332,6 +280,8 @@ const handlePictureCardPreview = uploadFile => {
 
 // ?添加文章
 const addArtHandler = () => {
+  console.log(artData);
+
   addArtVisible.value = false;
 };
 
