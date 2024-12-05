@@ -71,7 +71,7 @@ const addArtType = async () => {
   }
   dialogVisible.value = false;
   // 发送请求添加分类
-  const result = await typeApi.addTypes(typeName.value);
+  const result = await typeApi.addType(typeName.value);
   console.log("addType", result);
   // 添加完成后将分类清空然后刷新列表
   get_type_list();
@@ -80,7 +80,7 @@ const addArtType = async () => {
 // ?删除分类
 const handleDelete = async (index, row) => {
   console.log(row.id);
-  const result = await typeApi.delTypes(row.id);
+  const result = await typeApi.delType(row.id);
   console.log(result);
   ElMessage("删除成功了捏");
   get_type_list();

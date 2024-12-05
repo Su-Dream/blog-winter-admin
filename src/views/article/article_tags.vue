@@ -27,11 +27,11 @@
       </el-dialog>
     </div>
     <div class="art_tags_list">
-      <el-table size="large" :data="artTagsList" style="width: 100%">
+      <el-table size="large" :data="artTagList" style="width: 100%">
         <el-table-column prop="name" label="标签名称"> </el-table-column>
-        <el-table-column prop="inlineCount" label="文章数量"> </el-table-column>
+        <el-table-column prop="inlineCount" label="文章数量">0</el-table-column>
         <el-table-column
-          prop="createDate"
+          prop="createdAt"
           sortable
           label="创建时间"
         ></el-table-column>
@@ -67,46 +67,43 @@
 <script setup>
 import { ref } from "vue";
 import { Edit, Delete } from "@element-plus/icons-vue";
+import tagApi from "@/apis/tags.js";
 const search = ref("");
 const tagName = ref("");
 const dialogVisible = ref(false);
 // ?添加标签
-const addArtTag = () => {
+const addArtTag = async () => {
   if (tagName.value === "") {
+    ElMessage("标签内容呢？");
     return;
   }
   dialogVisible.value = false;
-  // todo:发送请求添加标签
-  console.log("addArtTag");
+  // 发送请求添加标签
+  const result = await tagApi.addTag(tagName.value);
+  console.log("addTag", result);
+  // 添加完成后将分类清空然后刷新列表
+  get_tag_list();
 
   // !添加完成后吧标签名清空
   tagName.value = "";
 };
 // ?删除标签
-const handleDelete = (index, row) => {
-  console.log(index, row);
+const handleDelete = async (index, row) => {
+  console.log(row.id);
+  const result = await tagApi.delType(row.id);
+  console.log(result);
+  ElMessage("删除成功了捏");
+  get_type_list();
 };
-// *标签列表
-const artTagsList = [
-  {
-    id: 1,
-    name: "web",
-    inlineCount: "1",
-    createDate: "2023-06-01",
-  },
-  {
-    id: 2,
-    name: "java",
-    inlineCount: "1",
-    createDate: "2023-01-21",
-  },
-  {
-    id: 3,
-    name: "node",
-    inlineCount: "2",
-    createDate: "2024-09-25",
-  },
-];
+// *分类列表
+let artTagList = ref([]);
+// ?获取分类列表
+const get_tag_list = async () => {
+  const result = await tagApi.getTags();
+  console.log(result.data);
+  artTagList.value = result.data.tags;
+};
+get_tag_list();
 </script>
 
 <style scoped>
