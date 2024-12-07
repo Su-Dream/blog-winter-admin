@@ -67,7 +67,7 @@ import { setUserCookie, getUserCookie, clearUserCookie } from "@/utils/auth.js";
 import { ElMessage } from "element-plus";
 import { useAuthStore } from "@/stores/user.js";
 import router from "@/routes";
-import apiClient from "@/apis/index.js";
+import userApi from "@/apis/users.js";
 onMounted(() => {
   getCookieForm();
 });
@@ -120,24 +120,32 @@ const submitHandler = async () => {
     password: ruleForm.pass,
   };
   // 发送请求拿到结果
-  const result = await apiClient.post("/user/login", userInfo);
-  const userStore = useAuthStore();
-  if (result.code !== 1001) {
-    return ElMessage({
-      message: result.message,
-      type: "error",
-    });
-  } else {
+  try {
+    const result = await userApi.login(userInfo);
     const { token } = result.data;
+    const userStore = useAuthStore();
     userStore.setToken(token);
     ElMessage({
       message: "登录成功!正在跳转页面...",
       type: "success",
     });
+    // 跳转到仪表盘
+    console.log(`登录成功，设置用户权限${userStore.token}`);
+  } catch (error) {
+    if (error.response) {
+      // 提取服务器返回的错误信息
+      ElMessage({
+        message: error.response.data.message || "登录失败，服务器无返回信息",
+        type: "error",
+      });
+    } else {
+      // 处理非响应错误（如网络错误）
+      ElMessage({
+        message: error.message || "网络异常，请稍后再试",
+        type: "error",
+      });
+    }
   }
-
-  // 跳转到仪表盘
-  console.log(`登录成功，设置用户权限${userStore.token}`);
 
   router.push("/home");
 };
@@ -149,7 +157,6 @@ const submitForm = formEl => {
   formEl.validate(valid => {
     if (valid) {
       //? 登录逻辑
-      console.log("submit!");
       submitHandler();
     } else {
       ElMessage({

@@ -1,4 +1,4 @@
-import apiCilent from "../apiClient";
+import apiCilent from "./index";
 
 /**
  * - 注册接口
