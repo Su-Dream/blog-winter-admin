@@ -22,6 +22,13 @@ const register = data => {
 const login = data => {
   return apiCilent.post("/user/login", data);
 };
+/**
+ * - 获取全部用户
+ *@returns - 所有用户信息
+ */
+const getAllUser = () => {
+  return apiCilent.post("/user/all");
+};
 
 /**
  * - 获取邮箱验证码接口
@@ -32,6 +39,7 @@ const getEmailCode = email => {
 };
 
 export default {
+  getAllUser,
   register,
   login,
   getEmailCode,

@@ -1,29 +1,56 @@
 <template>
   <div class="blog-table">
-    <el-table :data="filterTableData" table-layout="auto" style="width: 100%">
-      <el-table-column label="头像" prop="avatar" />
-      <el-table-column label="昵称" prop="name" />
-      <el-table-column label="性别" prop="sex" />
-      <el-table-column label="管理员" prop="role">
+    <el-table :border="true" :data="filterTableData" table-layout="auto">
+      <el-table-column label="头像" width="100" prop="UserProfile.avatar">
+        <template #default="scope">
+          <el-image
+            style="width: 100px; height: 100px"
+            :src="scope.row.UserProfile.avatar"
+            :zoom-rate="1.2"
+            :max-scale="7"
+            :min-scale="0.2"
+            :preview-src-list="[scope.row.UserProfile.avatar]"
+            :preview-teleported="true"
+            :z-index="5"
+            fit="cover"
+          />
+        </template>
+      </el-table-column>
+      <el-table-column label="昵称" width="100" prop="username" />
+      <el-table-column label="性别" width="80" prop="UserProfile.gender" />
+      <el-table-column
+        label="邮箱"
+        width="200"
+        :show-overflow-tooltip="true"
+        prop="email"
+      />
+      <el-table-column label="联系电话" width="200" prop="UserProfile.phone" />
+      <el-table-column label="管理员" width="100" prop="role">
         <template #default="scope">
           <el-switch
-            :inactive-value="0"
             :active-value="1"
+            :inactive-value="0"
             v-model="scope.row.role"
+            @change="handleRoleChange(scope.row)"
           />
         </template>
       </el-table-column>
-      <el-table-column label="封禁" prop="isBan">
+      <el-table-column
+        label="个性签名"
+        :show-overflow-tooltip="true"
+        prop="UserProfile.bio"
+      />
+      <el-table-column label="注册时间" width="210" prop="createdAt" />
+      <el-table-column label="封禁" width="100" prop="isFlag">
         <template #default="scope">
           <el-switch
-            :inactive-value="0"
             :active-value="1"
-            v-model="scope.row.isBan"
+            :inactive-value="0"
+            v-model="scope.row.isFlag"
           />
         </template>
       </el-table-column>
-      <el-table-column label="注册时间" prop="date" />
-      <el-table-column align="right">
+      <el-table-column width="200" fixed="right" align="right">
         <template #header>
           <el-input v-model="search" placeholder="此处搜索" />
         </template>
@@ -35,7 +62,7 @@
               @click="handleEdit(scope.$index, scope.row)"
               type="primary"
             >
-              查看详情
+              详情
             </el-link>
             <el-popconfirm
               title="确认删除这个用户?"
@@ -54,7 +81,7 @@
     <div class="model">
       <el-dialog
         v-model="dialogFormVisible"
-        :title="form.name + '的详细资料'"
+        :title="form.username + '的详细资料'"
         width="500"
       >
         <el-form :model="form">
@@ -140,7 +167,7 @@
 import { computed, ref, reactive } from "vue";
 import { View, Delete } from "@element-plus/icons-vue";
 import { Download, Plus, ZoomIn } from "@element-plus/icons-vue";
-
+import userApi from "@/apis/users.js";
 // *upload配置
 
 const dialogImageUrl = ref("");
@@ -159,13 +186,17 @@ const handlePictureCardPreview = file => {
 const handleDownload = file => {
   console.log(file);
 };
+// todo:修改管理员权限
+const handleRoleChange = async row => {
+  console.log(row);
+};
 
 // *model数据
 const dialogFormVisible = ref(false);
 const formLabelWidth = "140px";
 const form = reactive({
   avatar: "",
-  name: "",
+  username: "",
   sex: "",
   bio: "",
 });
@@ -173,10 +204,10 @@ const form = reactive({
 // ?搜索功能
 const search = ref("");
 const filterTableData = computed(() =>
-  tableData.filter(
+  tableData.value.filter(
     data =>
       !search.value ||
-      data.name.toLowerCase().includes(search.value.toLowerCase())
+      data.username.toLowerCase().includes(search.value.toLowerCase())
   )
 );
 // ?编辑的回调
@@ -198,56 +229,82 @@ const handleDelete = (index, row) => {
   console.log(index, row);
 };
 
+const tableData = ref([]);
+
+const get_user_list = async () => {
+  try {
+    const result = await userApi.getAllUser();
+    console.log("result", result);
+
+    tableData.value = result.data.result.data;
+    console.log(tableData.value);
+  } catch (error) {
+    if (error.response) {
+      // 提取服务器返回的错误信息
+      ElMessage({
+        message: error.response.data.message,
+        type: "error",
+      });
+    } else {
+      // 处理非响应错误
+      ElMessage({
+        message: error.message,
+        type: "error",
+      });
+    }
+  }
+};
+get_user_list();
 // *model数据
-const tableData = [
-  {
-    date: "2016-05-03",
-    name: "Tom",
-    sex: "男",
-    isBan: 0,
-    role: 0,
-    bio: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Provident, et!",
-    avatar: "No. 189, Grove St, Los Angeles",
-  },
-  {
-    date: "2016-05-02",
-    sex: "男",
-    name: "John",
-    isBan: 0,
-    role: 1,
-    bio: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Provident, et!",
+// const tableData = [
+//   {
+//     date: "2016-05-03",
+//     name: "Tom",
+//     sex: "男",
+//     isBan: 0,
+//     role: 0,
+//     bio: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Provident, et!",
+//     avatar: "No. 189, Grove St, Los Angeles",
+//   },
+//   {
+//     date: "2016-05-02",
+//     sex: "男",
+//     name: "John",
+//     isBan: 0,
+//     role: 1,
+//     bio: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Provident, et!",
 
-    avatar: "No. 189, Grove St, Los Angeles",
-  },
-  {
-    date: "2016-05-04",
-    sex: "男",
-    name: "Morgan",
-    isBan: 1,
-    role: 1,
-    bio: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Provident, et!",
+//     avatar: "No. 189, Grove St, Los Angeles",
+//   },
+//   {
+//     date: "2016-05-04",
+//     sex: "男",
+//     name: "Morgan",
+//     isBan: 1,
+//     role: 1,
+//     bio: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Provident, et!",
 
-    avatar: "No. 189, Grove St, Los Angeles",
-  },
-  {
-    date: "2016-05-01",
-    sex: "女",
-    isBan: 1,
-    role: 0,
-    bio: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Provident, et!",
-    name: "Jessy",
-    avatar: "No. 189, Grove St, Los Angeles",
-  },
-  {
-    date: "2016-05-01",
-    name: "郑嘉明",
-    sex: "男",
-    role: 0,
-    bio: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Provident, et!",
-    isBan: 0,
-    avatar: "No. 189, Grove St, Los Angeles",
-  },
-];
+//     avatar: "No. 189, Grove St, Los Angeles",
+//   },
+//   {
+//     date: "2016-05-01",
+//     sex: "女",
+//     isBan: 1,
+//     role: 0,
+//     bio: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Provident, et!",
+//     name: "Jessy",
+//     avatar: "No. 189, Grove St, Los Angeles",
+//   },
+//   {
+//     date: "2016-05-01",
+//     name: "郑嘉明",
+//     sex: "男",
+//     role: 0,
+//     bio: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Provident, et!",
+//     isBan: 0,
+//     avatar: "No. 189, Grove St, Los Angeles",
+//   },
+// ];
 </script>
 
 <style scoped>
