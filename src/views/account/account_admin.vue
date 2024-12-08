@@ -88,7 +88,13 @@
           <el-form-item label="头像:" :label-width="formLabelWidth">
             <div class="upload">
               <el-upload
-                action="#"
+                :class="{ uploadStyle: isUploadIcon }"
+                ref="upload"
+                action="/api/upload"
+                :limit="1"
+                accept=".jpg,.png,.gif"
+                :on-exceed="handleExceed"
+                :on-change="handleChangeFile"
                 list-type="picture-card"
                 :auto-upload="false"
               >
@@ -117,7 +123,7 @@
                       <span
                         v-if="!disabled"
                         class="el-upload-list__item-delete"
-                        @click="handleRemove(file)"
+                        @click="handleRemoveFile(file)"
                       >
                         <el-icon><Delete /></el-icon>
                       </span>
@@ -132,22 +138,70 @@
             <!-- <el-input v-model="form.avatar" autocomplete="off" /> -->
           </el-form-item>
           <el-form-item label="昵称:" :label-width="formLabelWidth">
-            <el-input v-model="form.name" autocomplete="off" />
+            <el-input
+              style="width: 180px"
+              v-model="form.username"
+              autocomplete="off"
+              maxlength="12"
+              show-word-limit
+              type="text"
+            />
           </el-form-item>
           <el-form-item label="性别:" :label-width="formLabelWidth">
             <el-select
-              v-model="form.sex"
+              style="width: 180px"
+              v-model="form.UserProfile.gender"
               placeholder="Select"
-              style="width: 240px"
             >
-              <el-option label="保密" value="保密" />
               <el-option label="男" value="男" />
               <el-option label="女" value="女" />
             </el-select>
-            <!-- <el-input v-model="form.sex" autocomplete="off" /> -->
           </el-form-item>
+          <el-form-item label="邮箱:" :label-width="formLabelWidth">
+            <el-input
+              style="width: 180px"
+              v-model="form.email"
+              autocomplete="off"
+              type="text"
+            />
+          </el-form-item>
+          <el-form-item label="手机号:" :label-width="formLabelWidth">
+            <el-input
+              style="width: 180px"
+              v-model="form.UserProfile.phone"
+              autocomplete="off"
+              type="text"
+            />
+          </el-form-item>
+          <el-form-item label="是否停用:" :label-width="formLabelWidth">
+            <el-select
+              style="width: 180px"
+              v-model="form.isFlag"
+              placeholder="Select"
+            >
+              <el-option label="否" :value="0" />
+              <el-option label="是" :value="1" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="管理员:" :label-width="formLabelWidth">
+            <el-select
+              style="width: 180px"
+              v-model="form.role"
+              placeholder="Select"
+            >
+              <el-option label="管理员" :value="1" />
+              <el-option label="普通用户" :value="0" />
+            </el-select>
+          </el-form-item>
+
           <el-form-item label="个性签名:" :label-width="formLabelWidth">
-            <el-input v-model="form.bio" autocomplete="off" />
+            <el-input
+              v-model="form.UserProfile.bio"
+              autocomplete="off"
+              maxlength="200"
+              show-word-limit
+              type="text"
+            />
           </el-form-item>
         </el-form>
         <template #footer>
@@ -165,6 +219,7 @@
 
 <script setup>
 import { computed, ref, reactive } from "vue";
+import { genFileId } from "element-plus";
 import { View, Delete } from "@element-plus/icons-vue";
 import { Download, Plus, ZoomIn } from "@element-plus/icons-vue";
 import userApi from "@/apis/users.js";
@@ -173,10 +228,6 @@ import userApi from "@/apis/users.js";
 const dialogImageUrl = ref("");
 const dialogVisible = ref(false);
 const disabled = ref(false);
-
-const handleRemove = file => {
-  console.log(file);
-};
 
 const handlePictureCardPreview = file => {
   dialogImageUrl.value = file.url;
@@ -194,12 +245,7 @@ const handleRoleChange = async row => {
 // *model数据
 const dialogFormVisible = ref(false);
 const formLabelWidth = "140px";
-const form = reactive({
-  avatar: "",
-  username: "",
-  sex: "",
-  bio: "",
-});
+const form = reactive({});
 
 // ?搜索功能
 const search = ref("");
@@ -210,27 +256,53 @@ const filterTableData = computed(() =>
       data.username.toLowerCase().includes(search.value.toLowerCase())
   )
 );
-// ?编辑的回调
-const handleEdit = (index, row) => {
-  // *把当前行数据渲染到model上
-  Object.keys(form).forEach(key => {
-    if (row.hasOwnProperty(key)) {
-      form[key] = row[key]; // 更新form上的属性
-    }
-  });
-  console.log(form);
-
-  dialogFormVisible.value = true;
-
-  console.log(index, row);
+// ?上传图片功能
+const upload = ref();
+let isUploadIcon = ref(false);
+// 上传图片后超出限制的回调
+const handleExceed = files => {
+  // 替换上一张图片
+  upload.value.clearFiles();
+  const file = files[0];
+  file.uid = genFileId();
+  upload.value.handleStart(file);
 };
-// ?删除的回调
+// 文件状态改变时
+const handleChangeFile = (file, files) => {
+  if (files === undefined) {
+    isUploadIcon.value = false;
+  } else {
+    isUploadIcon.value = true;
+  }
+  console.log(file, files);
+};
+// 删除图片时的回调
+const handleRemoveFile = (file, files) => {
+  upload.value.clearFiles();
+  if (files === undefined) {
+    isUploadIcon.value = false;
+  } else {
+    isUploadIcon.value = true;
+  }
+
+  console.log(file, files);
+};
+
+// ?表格编辑的回调
+const handleEdit = (index, row) => {
+  console.log(index, row);
+  // 合并到表单中
+  Object.assign(form, row);
+  console.log(form);
+  dialogFormVisible.value = true;
+};
+// ?表格删除的回调
 const handleDelete = (index, row) => {
   console.log(index, row);
 };
 
 const tableData = ref([]);
-
+// 获取全部用户数据
 const get_user_list = async () => {
   try {
     const result = await userApi.getAllUser();
@@ -308,6 +380,9 @@ get_user_list();
 </script>
 
 <style scoped>
+.uploadStyle :deep(.el-upload--picture-card) {
+  display: none;
+}
 :deep(.el-upload) {
   width: 6.25rem;
   height: 6.25rem;
