@@ -5,7 +5,7 @@ import apiCilent from "./index";
  * @returns 查询结果
  */
 const getUserArtList = () => {
-  return apiCilent.get("/");
+  return apiCilent.get("/post");
 };
 /**
  * - 查询指定文章详情
@@ -13,7 +13,7 @@ const getUserArtList = () => {
  * @returns - 查询结果
  */
 const getTargetArt = id => {
-  return apiCilent.get(`/${id}`);
+  return apiCilent.get(`/post/${id}`);
 };
 /**
  * 新增文章
@@ -21,12 +21,12 @@ const getTargetArt = id => {
  * @param {Object} data - 包含文章信息的对象
  * @param {string} data.title - 文章标题
  * @param {string} data.content - 文章内容
- * @param {Array<string>} data.types - 文章类别
+ * @param {string} data.category_id - 文章类别ID
  * @param {Array<string>} data.tags - 文章标签数组
  * @returns {Promise<Object>} 返回包含查询结果的Promise对象
  */
 const addArt = data => {
-  return apiClient.post("/", data);
+  return apiCilent.post("/post", data);
 };
 
 /**
@@ -37,7 +37,7 @@ const addArt = data => {
  * @param {string} data.content - 文章内容
  */
 const updateArt = data => {
-  return apiClient.put(`/update`, data);
+  return apiCilent.put(`/post/update`, data);
 };
 
 /**
@@ -46,7 +46,7 @@ const updateArt = data => {
  * @returns - 查询结果
  */
 const deleteArt = id => {
-  return apiCilent.delete(`/${id}`);
+  return apiCilent.delete(`/post/${id}`);
 };
 
 export default {
