@@ -13,17 +13,13 @@
 
     <el-divider />
     <div class="site_setting">
-      <div
-        class="site_setting_item"
-        v-for="(item, index) in siteSetting"
-        :key="index"
-      >
+      <div class="site_setting_item">
         <p class="title">
-          <span class="site_text">{{ item.title }}</span>
+          <span class="site_text">网站LOGO文本</span>
           <el-tooltip
             class="box-item"
             effect="dark"
-            :content="item.tips"
+            content="支持HTML"
             placement="top"
           >
             <span
@@ -32,9 +28,47 @@
           </el-tooltip>
         </p>
         <el-input
-          :type="index === 1 ? 'textarea' : 'text'"
+          v-model="blogConfig.logo_text"
+          placeholder="Please input Site Info"
+        />
+      </div>
+      <div class="site_setting_item">
+        <p class="title">
+          <span class="site_text">网站meta文本</span>
+          <el-tooltip
+            class="box-item"
+            effect="dark"
+            content="支持HTML"
+            placement="top"
+          >
+            <span
+              ><el-icon size="16"><InfoFilled /></el-icon
+            ></span>
+          </el-tooltip>
+        </p>
+        <el-input
+          type="textarea"
           :rows="4"
-          v-model="item.content"
+          v-model="blogConfig.meta_description"
+          placeholder="Please input Site Info"
+        />
+      </div>
+      <div class="site_setting_item">
+        <p class="title">
+          <span class="site_text">网站footer备案信息</span>
+          <el-tooltip
+            class="box-item"
+            effect="dark"
+            content="支持HTML"
+            placement="top"
+          >
+            <span
+              ><el-icon size="16"><InfoFilled /></el-icon
+            ></span>
+          </el-tooltip>
+        </p>
+        <el-input
+          v-model="blogConfig.footer_info"
           placeholder="Please input Site Info"
         />
       </div>
@@ -44,29 +78,15 @@
 
 <script setup>
 import { InfoFilled } from "@element-plus/icons-vue";
-import { reactive } from "vue";
-
-// *站点配置信息
-const siteSetting = reactive([
-  {
-    title: "网站LOGO文本",
-    content: `链星域`,
-    tips: "支持HTML",
-  },
-  {
-    title: "网站meta文本",
-    content: `欢迎来到链星域
-探索Web技术的新大地
-技术交流的港湾
-技术爱好者的聚集地`,
-    tips: "请使用换行区分每一条语句",
-  },
-  {
-    title: "网站footer备案信息",
-    content: "赣ICP备2024044145号",
-    tips: "支持HTML",
-  },
-]);
+import { ref } from "vue";
+import setApi from "@/apis/outher.js";
+const blogConfig = ref({});
+async function init() {
+  const result = await setApi.getBlogConfig();
+  blogConfig.value = result.data.result[0];
+  console.log(blogConfig.value.logo_text);
+}
+init();
 // *点击保存的回调
 const saveSiteSettingHandler = config => {
   // todo:保存到数据库
