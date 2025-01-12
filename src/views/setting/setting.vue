@@ -88,13 +88,23 @@ async function init() {
 }
 init();
 // *点击保存的回调
-const saveSiteSettingHandler = config => {
-  // todo:保存到数据库
-  if (true) {
+const saveSiteSettingHandler = async config => {
+  try {
+    // console.log(blogConfig);
+    const result = await setApi.updateBlogConfig(blogConfig.value);
+    console.log(result);
     console.log(config);
     ElMessage({
       message: "保存成功!",
       type: "success",
+      plain: true,
+    });
+  } catch (error) {
+    console.log(error);
+
+    ElMessage({
+      message: "保存失败!",
+      type: "error",
       plain: true,
     });
   }
