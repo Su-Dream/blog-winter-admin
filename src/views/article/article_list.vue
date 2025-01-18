@@ -175,13 +175,13 @@
           :before-close="handleCancelEdit"
           v-model="dialogFormVisible"
           title="文章信息"
-          width="500"
+          width="1200"
         >
           <el-form :model="artData">
-            <el-form-item label="文章名称:" :label-width="formLabelWidth">
+            <el-form-item label="文章标题:" :label-width="formLabelWidth">
               <el-input v-model="artData.title" autocomplete="off" />
             </el-form-item>
-            <el-form-item label="分类:" :label-width="formLabelWidth">
+            <el-form-item label="文章分类:" :label-width="formLabelWidth">
               <el-select
                 v-model="artData.category_id"
                 placeholder="Select"
@@ -198,11 +198,20 @@
                 <el-option label="web" value="web" /> -->
               </el-select>
             </el-form-item>
-            <el-form-item label="文章内容:" :label-width="formLabelWidth">
-              <el-input disabled v-model="artData.content" autocomplete="off" />
+            <el-form-item>
+              <!-- 富文本编辑器 -->
+              <div class="editText">
+                <editText v-model="artData.content" />
+              </div>
             </el-form-item>
-            <el-form-item label="预览图:" :label-width="formLabelWidth">
-              <el-upload
+            <el-form-item label="文章封面:" :label-width="formLabelWidth">
+              <el-image
+                style="width: 900px; height: 400px"
+                :src="artData.picture"
+                fit="cover"
+              />
+
+              <!-- <el-upload
                 disabled
                 v-model:file-list="fileList"
                 action="#"
@@ -212,7 +221,7 @@
                 :on-remove="handleRemove"
               >
                 <el-icon><Plus /></el-icon>
-              </el-upload>
+              </el-upload> -->
 
               <el-dialog v-model="dialogVisible">
                 <img w-full :src="dialogImageUrl" alt="Preview Image" />
