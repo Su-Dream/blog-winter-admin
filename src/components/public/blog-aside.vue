@@ -17,14 +17,11 @@
           <el-icon><House /></el-icon>
           <template #title>首页</template>
         </el-menu-item>
-        <el-sub-menu index="/account">
-          <template #title>
-            <el-icon><User /></el-icon>
-            <span>账号管理</span>
-          </template>
-          <el-menu-item index="/account/user">用户</el-menu-item>
-          <el-menu-item index="/account/admin">管理员</el-menu-item>
-        </el-sub-menu>
+        <el-menu-item index="/account">
+          <el-icon><User /></el-icon>
+          <template #title>账号管理</template>
+        </el-menu-item>
+
         <el-sub-menu index="/article">
           <template #title>
             <el-icon><Document /></el-icon>

@@ -1,7 +1,6 @@
 import BlogLogin from "@/views/login/blog-Login.vue";
 import BlogHome from "@/views/Home/blog-Home.vue";
-import AccUser from "@/views/account/account_user.vue";
-import AccAdmin from "@/views/account/account_admin.vue";
+import Account from "@/views/account/account_admin.vue";
 import ArtList from "@/views/article/article_list.vue";
 import ArtTags from "@/views/article/article_tags.vue";
 import ArtTypes from "@/views/article/article_types.vue";
@@ -25,20 +24,8 @@ export const routes = [
   },
   {
     path: "/account",
+    component: Account,
     meta: { title: "账号管理", requiresAuth: true, role: ["user", "admin"] },
-
-    children: [
-      {
-        path: "user",
-        component: AccUser,
-        meta: { title: "用户", requiresAuth: true, role: ["user", "admin"] },
-      },
-      {
-        path: "admin",
-        component: AccAdmin,
-        meta: { title: "管理员", requiresAuth: true, role: ["admin"] },
-      },
-    ],
   },
   {
     path: "/article",
