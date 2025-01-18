@@ -179,7 +179,7 @@
         >
           <el-form :model="artData">
             <el-form-item label="文章名称:" :label-width="formLabelWidth">
-              <el-input disabled v-model="artData.title" autocomplete="off" />
+              <el-input v-model="artData.title" autocomplete="off" />
             </el-form-item>
             <el-form-item label="分类:" :label-width="formLabelWidth">
               <el-select
@@ -198,8 +198,8 @@
                 <el-option label="web" value="web" /> -->
               </el-select>
             </el-form-item>
-            <el-form-item label="描述:" :label-width="formLabelWidth">
-              <el-input disabled v-model="artData.title" autocomplete="off" />
+            <el-form-item label="文章内容:" :label-width="formLabelWidth">
+              <el-input disabled v-model="artData.content" autocomplete="off" />
             </el-form-item>
             <el-form-item label="预览图:" :label-width="formLabelWidth">
               <el-upload
