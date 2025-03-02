@@ -1,8 +1,4 @@
-import {
-  createMemoryHistory,
-  createWebHistory,
-  createRouter,
-} from "vue-router";
+import { createWebHistory, createRouter } from "vue-router";
 import { routes } from "./routes";
 import { decodeToken, validataToken } from "../utils/jwt";
 import { useAuthStore } from "@/stores/user";

@@ -17,7 +17,6 @@ apiClient.interceptors.request.use(
   config => {
     const authStore = useAuthStore(); // 获取 Pinia 中的 auth store
     const token = authStore.token; // 从 Pinia 中获取 token
-
     if (token) {
       config.headers["Authorization"] = `Bearer ${token}`; // 在 headers 中添加 Authorization
     }
