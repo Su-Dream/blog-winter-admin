@@ -4,7 +4,7 @@
       <el-input
         style="width: 240px"
         v-model="search"
-        placeholder="请输入需要查询链接的用户名"
+        placeholder="请输入需要查询的友链名"
       >
       </el-input>
     </div>
