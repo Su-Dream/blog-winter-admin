@@ -1,6 +1,11 @@
 <template>
   <div class="images">
-    <el-table :data="list.list" border style="width: 100%">
+    <el-table
+      :default-sort="{ prop: 'createTime', order: 'descending' }"
+      :data="list.list"
+      border
+      style="width: 100%"
+    >
       <el-table-column prop="id" label="图片预览" width="180">
         <template #default="scope">
           <el-image
@@ -17,8 +22,13 @@
         </template>
       </el-table-column>
       <el-table-column prop="url" label="图片地址" />
-      <el-table-column prop="size" label="尺寸" width="80" />
-      <el-table-column prop="createTime" label="创建时间" width="300" />
+      <el-table-column prop="size" sortable label="尺寸" width="80" />
+      <el-table-column
+        prop="createTime"
+        sortable
+        label="创建时间"
+        width="300"
+      />
       <el-table-column fixed="right" label="操作" width="100">
         <template #default="{ row }">
           <el-popconfirm
