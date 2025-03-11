@@ -107,13 +107,13 @@ const rules = reactive({
 });
 //* 登录逻辑
 const submitHandler = async () => {
-  // ?保存密码操作
+  // 保存密码操作
   if (savePwd.value) {
     setUserCookie(ruleForm.usnm, ruleForm.pass, 7); // 记住密码
   } else {
     clearUserCookie();
   }
-  //? 发送请求拿到用户信息
+  // 发送请求拿到用户信息
   // 构建用户信息
   const userInfo = {
     username: ruleForm.usnm,
@@ -139,7 +139,7 @@ const submitHandler = async () => {
         type: "error",
       });
     } else {
-      // 处理非响应错误（如网络错误）
+      // 处理非响应错误
       ElMessage({
         message: error.message || "网络异常，请稍后再试",
         type: "error",

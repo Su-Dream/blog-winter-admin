@@ -193,9 +193,9 @@
                   :label="type.name"
                   :value="type.id"
                 />
-                <!-- <el-option label="其他" value="其他" />
+                <el-option label="其他" value="其他" />
                 <el-option label="java" value="java" />
-                <el-option label="web" value="web" /> -->
+                <el-option label="web" value="web" />
               </el-select>
             </el-form-item>
             <el-form-item>
@@ -211,7 +211,7 @@
                 fit="cover"
               />
 
-              <!-- <el-upload
+              <el-upload
                 disabled
                 v-model:file-list="fileList"
                 action="#"
@@ -221,7 +221,7 @@
                 :on-remove="handleRemove"
               >
                 <el-icon><Plus /></el-icon>
-              </el-upload> -->
+              </el-upload>
 
               <el-dialog v-model="dialogVisible">
                 <img w-full :src="dialogImageUrl" alt="Preview Image" />

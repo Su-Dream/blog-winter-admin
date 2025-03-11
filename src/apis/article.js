@@ -2,7 +2,7 @@ import apiCilent from "./index";
 
 /**
  * - 查询当前登录用户的文章列表
- * @returns 查询结果
+ * @returns {Promise}  查询结果
  */
 const getUserArtList = () => {
   return apiCilent.get("/post");
@@ -10,7 +10,7 @@ const getUserArtList = () => {
 /**
  * - 查询指定文章详情
  * @param {String} id - 文章id
- * @returns - 查询结果
+ * @returns {Promise}  - 查询结果
  */
 const getTargetArt = id => {
   return apiCilent.get(`/post/${id}`);
@@ -43,7 +43,7 @@ const updateArt = data => {
 /**
  * - 删除文章
  * @param {String} id - 文章id
- * @returns - 查询结果
+ * @returns {Promise}  - 查询结果
  */
 const deleteArt = id => {
   return apiCilent.delete(`/post/${id}`);
