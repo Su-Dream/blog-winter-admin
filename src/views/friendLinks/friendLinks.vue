@@ -11,10 +11,18 @@ const title = ref("");
 const dialogVisible = ref(false);
 // 搜索友链
 const onSearch = async () => {
-  ElMessage.success("搜索触发成功");
+  filterLinks.value = links.value.filter(v => {
+    return v.username.toLowerCase().includes(input.value.toLowerCase());
+  });
+  if (filterLinks.value.length === 0) {
+    ElMessage("没有找到相关信息");
+  } else {
+    ElMessage.success("搜索成功");
+  }
 };
 // 获取友链信息
 const links = ref();
+const filterLinks = ref([]);
 const getLinkData = async () => {
   const res = await linkAPI.getLinks();
   links.value = res.data.result;
@@ -23,10 +31,6 @@ const getLinkData = async () => {
 onMounted(() => {
   getLinkData();
 });
-// 添加触发成功
-const onAddLink = async () => {
-  ElMessage.success("添加触发成功");
-};
 // 获取子组件
 const dialogRef = ref();
 // 打开添加友链成功
@@ -74,7 +78,12 @@ const onChange = async (page, pageSize) => {
     <!-- 表格 -->
     <div class="main">
       <div class="table">
-        <el-table :data="links" border style="width: 100%">
+        <el-table
+          :data="filterLinks.length > 0 ? filterLinks : links"
+          border
+          style="width: 100%"
+          max-height="450"
+        >
           <el-table-column prop="username" label="友链名称" width="180" />
           <el-table-column prop="url" label="友链链接" width="180" />
           <el-table-column prop="description" label="友链描述" />
@@ -95,21 +104,6 @@ const onChange = async (page, pageSize) => {
             </template>
           </el-table-column>
         </el-table>
-      </div>
-    </div>
-    <!-- 分页信息 -->
-    <div class="footer">
-      <div class="pagin">
-        <el-pagination
-          size="small"
-          background
-          layout="prev, pager, next"
-          :total="100"
-          :default-page-size="5"
-          :hide-on-single-page="true"
-          class="mt-4"
-          @current-change="onChange"
-        />
       </div>
     </div>
   </div>
