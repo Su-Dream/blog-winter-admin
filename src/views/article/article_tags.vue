@@ -51,9 +51,7 @@
                 @confirm="handleDelete(scope.$index, scope.row)"
               >
                 <template #reference>
-                  <el-link :underline="false" :icon="Delete" type="danger">
-                    删除
-                  </el-link>
+                  <el-button type="danger"> 删除 </el-button>
                 </template>
               </el-popconfirm>
             </div>

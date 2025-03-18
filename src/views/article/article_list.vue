@@ -148,22 +148,18 @@
         <el-table-column width="200" label="操作">
           <template #default="scope">
             <div class="edit">
-              <el-link
-                :underline="false"
-                :icon="View"
-                @click="handleEdit(scope.$index, scope.row)"
+              <el-button
                 type="primary"
+                @click="handleEdit(scope.$index, scope.row)"
               >
-                查看详情
-              </el-link>
+                编辑
+              </el-button>
               <el-popconfirm
                 title="是否删除这篇文章?不可逆!"
                 @confirm="handleDelete(scope.$index, scope.row)"
               >
                 <template #reference>
-                  <el-link :underline="false" :icon="Delete" type="danger">
-                    删除
-                  </el-link>
+                  <el-button type="danger"> 删除 </el-button>
                 </template>
               </el-popconfirm>
             </div>

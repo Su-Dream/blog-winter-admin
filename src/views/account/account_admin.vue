@@ -56,22 +56,18 @@
         </template>
         <template #default="scope">
           <div class="edit">
-            <el-link
-              :underline="false"
-              :icon="View"
-              @click="handleEdit(scope.$index, scope.row)"
+            <el-button
               type="primary"
+              @click="handleEdit(scope.$index, scope.row)"
             >
-              详情
-            </el-link>
+              编辑
+            </el-button>
             <el-popconfirm
               title="确认删除这个用户?"
               @confirm="handleDelete(scope.$index, scope.row)"
             >
               <template #reference>
-                <el-link :underline="false" :icon="Delete" type="danger">
-                  删除
-                </el-link>
+                <el-button type="danger">删除</el-button>
               </template>
             </el-popconfirm>
           </div>
