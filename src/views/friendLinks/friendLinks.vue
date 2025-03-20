@@ -25,7 +25,11 @@ const links = ref();
 const filterLinks = ref([]);
 const getLinkData = async () => {
   const res = await linkAPI.getLinks();
-  links.value = res.data.result;
+  links.value = res.data.result.map(v => ({
+    ...v,
+    createdAt: v.createdAt.replace("T", " ").replace(".000Z", ""),
+    updatedAt: v.updatedAt.replace("T", " ").replace(".000Z", ""),
+  }));
   console.log(links.value);
 };
 onMounted(() => {
@@ -87,6 +91,8 @@ const onChange = async (page, pageSize) => {
           <el-table-column prop="username" label="友链名称" width="180" />
           <el-table-column prop="url" label="友链链接" width="180" />
           <el-table-column prop="description" label="友链描述" />
+          <el-table-column prop="createdAt" label="创建时间" />
+
           <el-table-column fixed="right" label="操作" width="160">
             <template #default="{ row }">
               <el-button @click="onUpdateLink(row)" type="primary"

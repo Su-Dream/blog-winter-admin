@@ -85,7 +85,7 @@ const addArtTag = async () => {
   // !添加完成后吧标签名清空
   tagName.value = "";
 };
-// ?删除标签
+// 删除标签
 const handleDelete = async (index, row) => {
   console.log(row.id);
   const result = await tagApi.delType(row.id);
@@ -93,13 +93,17 @@ const handleDelete = async (index, row) => {
   ElMessage("删除成功了捏");
   get_type_list();
 };
-// *分类列表
+// 分类列表
 let artTagList = ref([]);
-// ?获取分类列表
+// 获取分类列表
 const get_tag_list = async () => {
   const result = await tagApi.getTags();
   console.log(result.data);
-  artTagList.value = result.data.tags;
+  artTagList.value = result.data.tags.map(v => ({
+    ...v,
+    createdAt: v.createdAt.replace("T", " ").replace(".000Z", ""),
+    updatedAt: v.updatedAt.replace("T", " ").replace(".000Z", ""),
+  }));
 };
 get_tag_list();
 </script>

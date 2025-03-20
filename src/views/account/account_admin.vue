@@ -25,7 +25,7 @@
         prop="email"
       />
       <el-table-column label="联系电话" width="200" prop="UserProfile.phone" />
-      <el-table-column label="管理员" width="100" prop="role">
+      <el-table-column label="管理员" prop="role">
         <template #default="scope">
           <el-switch
             :active-value="1"
@@ -41,11 +41,12 @@
         prop="UserProfile.bio"
       />
       <el-table-column label="注册时间" width="210" prop="createdAt" />
-      <el-table-column label="封禁" width="100" prop="isFlag">
+      <el-table-column label="封禁" prop="isFlag">
         <template #default="scope">
           <el-switch
             :active-value="1"
             :inactive-value="0"
+            @change="onBanChange(scope.row)"
             v-model="scope.row.isFlag"
           />
         </template>
@@ -127,6 +128,7 @@
                   </div>
                 </template>
               </el-upload>
+              <!-- 用户详情页 -->
               <el-dialog v-model="dialogVisible">
                 <img w-full :src="dialogImageUrl" alt="Preview Image" />
               </el-dialog>
@@ -237,7 +239,10 @@ const handleDownload = file => {
 const handleRoleChange = async row => {
   console.log(row);
 };
-
+// todo:用户软封禁
+const onBanChange = async row => {
+  console.log(row);
+};
 // *model数据
 const dialogFormVisible = ref(false);
 const formLabelWidth = "140px";
@@ -303,8 +308,11 @@ const get_user_list = async () => {
   try {
     const result = await userApi.getAllUser();
     console.log("result", result);
-
-    tableData.value = result.data.result.data;
+    tableData.value = result.data.result.data.map(v => ({
+      ...v,
+      createdAt: v.createdAt.replace("T", " ").replace(".000Z", ""),
+      updatedAt: v.updatedAt.replace("T", " ").replace(".000Z", ""),
+    }));
     console.log(tableData.value);
   } catch (error) {
     if (error.response) {
@@ -323,56 +331,6 @@ const get_user_list = async () => {
   }
 };
 get_user_list();
-// *model数据
-// const tableData = [
-//   {
-//     date: "2016-05-03",
-//     name: "Tom",
-//     sex: "男",
-//     isBan: 0,
-//     role: 0,
-//     bio: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Provident, et!",
-//     avatar: "No. 189, Grove St, Los Angeles",
-//   },
-//   {
-//     date: "2016-05-02",
-//     sex: "男",
-//     name: "John",
-//     isBan: 0,
-//     role: 1,
-//     bio: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Provident, et!",
-
-//     avatar: "No. 189, Grove St, Los Angeles",
-//   },
-//   {
-//     date: "2016-05-04",
-//     sex: "男",
-//     name: "Morgan",
-//     isBan: 1,
-//     role: 1,
-//     bio: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Provident, et!",
-
-//     avatar: "No. 189, Grove St, Los Angeles",
-//   },
-//   {
-//     date: "2016-05-01",
-//     sex: "女",
-//     isBan: 1,
-//     role: 0,
-//     bio: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Provident, et!",
-//     name: "Jessy",
-//     avatar: "No. 189, Grove St, Los Angeles",
-//   },
-//   {
-//     date: "2016-05-01",
-//     name: "郑嘉明",
-//     sex: "男",
-//     role: 0,
-//     bio: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Provident, et!",
-//     isBan: 0,
-//     avatar: "No. 189, Grove St, Los Angeles",
-//   },
-// ];
 </script>
 
 <style scoped>

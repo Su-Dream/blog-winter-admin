@@ -88,8 +88,17 @@ const getImgData = async (page, pageSize) => {
 
   try {
     const res = await imgApi.getImages(params);
+    console.log(res.data);
+    // 序列化时间后的对象
+    const res2 = {
+      ...res.data,
+      list: res.data.list.map(item => ({
+        ...item,
+        createTime: item.createTime.replace(/T|\.\d{3}Z/g, " "),
+      })),
+    };
     if (res.data) {
-      Object.assign(list.value, res.data);
+      Object.assign(list.value, res2);
     }
   } catch (error) {
     ElMessage.error("获取数据失败");

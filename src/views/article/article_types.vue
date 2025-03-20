@@ -89,7 +89,11 @@ let artTypeList = ref([]);
 const get_type_list = async () => {
   const result = await typeApi.getTypes();
   console.log(result.data);
-  artTypeList.value = result.data.rows;
+  artTypeList.value = result.data.rows.map(v => ({
+    ...v,
+    createdAt: v.createdAt.replace("T", " ").replace(".000Z", ""),
+    updatedAt: v.updatedAt.replace("T", " ").replace(".000Z", ""),
+  }));
 };
 get_type_list();
 </script>

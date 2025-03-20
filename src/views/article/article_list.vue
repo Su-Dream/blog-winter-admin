@@ -264,10 +264,25 @@ const init = async () => {
     const res = await tagApi.getTags();
     const res2 = await typeApi.getTypes();
     const res3 = await artApi.getUserArtList();
-    Object.assign(tableData, res3.data.Post);
 
-    tags.value = res.data.tags;
-    types.value = res2.data.rows;
+    Object.assign(
+      tableData,
+      res3.data.Post.map(v => ({
+        ...v,
+        createdAt: v.createdAt.replace("T", " ").replace(".000Z", ""),
+        updatedAt: v.updatedAt.replace("T", " ").replace(".000Z", ""),
+      }))
+    );
+    tags.value = res.data.tags.map(v => ({
+      ...v,
+      createdAt: v.createdAt.replace("T", " ").replace(".000Z", ""),
+      updatedAt: v.updatedAt.replace("T", " ").replace(".000Z", ""),
+    }));
+    types.value = res2.data.rows.map(v => ({
+      ...v,
+      createdAt: v.createdAt.replace("T", " ").replace(".000Z", ""),
+      updatedAt: v.updatedAt.replace("T", " ").replace(".000Z", ""),
+    }));
   } catch (error) {
     if (error.response) {
       // 提取服务器返回的错误信息
