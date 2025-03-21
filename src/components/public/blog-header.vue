@@ -43,11 +43,14 @@
 
 <script setup>
 import { Grid, HomeFilled, Menu } from "@element-plus/icons-vue";
-import { reactive, markRaw, ref, toRefs } from "vue";
+import { reactive, markRaw, ref, toRefs, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { useAuthStore } from "@/stores/user";
+import { useProfileStore } from "@/stores/profile";
 import router from "@/routes";
 const route = useRoute();
+const profileStore = useProfileStore();
+console.log("profile", profileStore.profile);
 
 const state = reactive({
   circleUrl:

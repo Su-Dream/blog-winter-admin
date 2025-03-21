@@ -129,6 +129,8 @@ const submitHandler = async () => {
     const profile = await userApi.getUserInfo();
     const profileStore = useProfileStore();
     profileStore.setProfile(profile.data.rows);
+    console.log("状态已保存", profileStore.profile);
+
     ElMessage({
       message: "登录成功!正在跳转页面...",
       type: "success",
