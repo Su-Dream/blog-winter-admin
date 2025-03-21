@@ -5,7 +5,6 @@ export const useProfileStore = defineStore(
   () => {
     const profile = ref({});
     const setProfile = newProfile => {
-      console.log("newProfile", newProfile);
       profile.value = newProfile;
     };
     const clearProfile = () => {

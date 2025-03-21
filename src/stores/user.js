@@ -1,18 +1,20 @@
 // src/stores/auth.js
 import { defineStore } from "pinia";
+import { ref } from "vue";
 
-export const useAuthStore = defineStore("auth", {
-  state: () => ({
-    token: localStorage.getItem("token") || "", // 默认从 localStorage 获取 token
-  }),
-  actions: {
-    setToken(newToken) {
-      this.token = newToken;
-      localStorage.setItem("token", newToken); // 更新 localStorage 中的 token
-    },
-    removeToken() {
-      this.token = "";
-      localStorage.removeItem("token"); // 移除 localStorage 中的 token
-    },
+export const useAuthStore = defineStore(
+  "auth",
+  () => {
+    const token = ref("");
+    const setToken = newToken => {
+      token.value = newToken;
+    };
+    const removeToken = () => {
+      token.value = "";
+    };
+    return { token, setToken, removeToken };
   },
-});
+  {
+    persist: true,
+  }
+);
