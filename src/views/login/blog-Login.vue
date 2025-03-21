@@ -108,6 +108,9 @@ const rules = reactive({
 });
 //* 登录逻辑
 const submitHandler = async () => {
+  const userStore = useAuthStore();
+  const profileStore = useProfileStore();
+
   // 保存密码操作
   if (savePwd.value) {
     setUserCookie(ruleForm.usnm, ruleForm.pass, 7); // 记住密码
@@ -123,11 +126,9 @@ const submitHandler = async () => {
   // 发送请求拿到结果
   try {
     const result = await userApi.login(userInfo);
-    const userStore = useAuthStore();
     const { token } = result.data;
     userStore.setToken(token);
     const profile = await userApi.getUserInfo();
-    const profileStore = useProfileStore();
     profileStore.setProfile(profile.data.rows);
     console.log("状态已保存", profileStore.profile);
 
@@ -135,8 +136,6 @@ const submitHandler = async () => {
       message: "登录成功!正在跳转页面...",
       type: "success",
     });
-    // 跳转到仪表盘
-    console.log(`登录成功，设置用户权限${userStore.token}`);
   } catch (error) {
     if (error.response) {
       // 提取服务器返回的错误信息
@@ -152,7 +151,6 @@ const submitHandler = async () => {
       });
     }
   }
-
   router.push("/home");
 };
 //* 提交操作

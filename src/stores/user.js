@@ -9,10 +9,10 @@ export const useAuthStore = defineStore(
     const setToken = newToken => {
       token.value = newToken;
     };
-    const removeToken = () => {
+    const clearToken = () => {
       token.value = "";
     };
-    return { token, setToken, removeToken };
+    return { token, setToken, clearToken };
   },
   {
     persist: true,

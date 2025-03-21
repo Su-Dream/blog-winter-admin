@@ -33,7 +33,11 @@
                 <el-button @click="loginOut" plain>退出登录</el-button>
               </div>
             </template>
-            <el-avatar :size="40" :src="circleUrl" />
+            <el-avatar
+              v-if="profileStore.profile && profileStore.profile.UserProfile"
+              :size="40"
+              :src="profileStore.profile.UserProfile.avatar"
+            />
           </el-tooltip>
         </div>
       </div>
@@ -50,24 +54,12 @@ import { useProfileStore } from "@/stores/profile";
 import router from "@/routes";
 const route = useRoute();
 const profileStore = useProfileStore();
-console.log("profile", profileStore.profile);
-
-const state = reactive({
-  circleUrl:
-    "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
-  sizeList: ["small", "", "large"],
-});
-const { circleUrl } = toRefs(state);
-
 // ?登出操作
 const loginOut = () => {
   const userStore = useAuthStore();
-  userStore.setToken("");
-  ElMessage({
-    message: "登出成功!",
-    type: "info",
-    plain: true,
-  });
+  userStore.clearToken();
+  profileStore.clearProfile();
+  ElMessage("登出成功");
   router.push("/login");
 };
 
