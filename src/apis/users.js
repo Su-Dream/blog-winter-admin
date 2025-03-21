@@ -14,6 +14,14 @@ const register = data => {
 };
 
 /**
+ * - 获取用户信息
+ * @returns - 用户信息
+ */
+const getUserInfo = () => {
+  return apiCilent.post("/user/profile");
+};
+
+/**
  * - 登录接口
  * @param {Object} data - 传入对象
  * @param {String} data.username - 用户名
@@ -47,8 +55,6 @@ const getEmailCode = email => {
  * @param {String} data.bio - 个性签名
  */
 const updateUser = data => {
-  console.log("data", data);
-
   return apiCilent.patch("/profiles/updateProfile", data);
 };
 
@@ -58,4 +64,5 @@ export default {
   login,
   getEmailCode,
   updateUser,
+  getUserInfo,
 };

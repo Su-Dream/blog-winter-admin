@@ -68,6 +68,7 @@ import { ElMessage } from "element-plus";
 import { useAuthStore } from "@/stores/user.js";
 import router from "@/routes";
 import userApi from "@/apis/users.js";
+import { useProfileStore } from "../../stores/profile";
 onMounted(() => {
   getCookieForm();
 });
@@ -122,9 +123,12 @@ const submitHandler = async () => {
   // 发送请求拿到结果
   try {
     const result = await userApi.login(userInfo);
-    const { token } = result.data;
     const userStore = useAuthStore();
+    const { token } = result.data;
     userStore.setToken(token);
+    const profile = await userApi.getUserInfo();
+    const profileStore = useProfileStore();
+    profileStore.setProfile(profile.data.rows);
     ElMessage({
       message: "登录成功!正在跳转页面...",
       type: "success",

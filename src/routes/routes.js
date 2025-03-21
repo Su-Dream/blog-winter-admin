@@ -9,7 +9,7 @@ import ImgList from "@/views/images/images.vue";
 import Comments from "@/views/comments/comments.vue";
 import FriendLinks from "@/views/friendLinks/friendLinks.vue";
 import Setting from "@/views/setting/setting.vue";
-
+import Profile from "@/views/profile/profile.vue";
 export const routes = [
   { path: "/", redirect: "/login" },
   {
@@ -78,5 +78,10 @@ export const routes = [
     path: "/setting",
     component: Setting,
     meta: { title: "网站设置", requiresAuth: true, role: ["admin"] },
+  },
+  {
+    path: "/profile",
+    component: Profile,
+    meta: { title: "个人信息", requiresAuth: true, role: ["user", "admin"] },
   },
 ];

@@ -27,7 +27,7 @@
           <el-tooltip placement="bottom" effect="light">
             <template #content>
               <div class="user-info">
-                <el-button plain>个人信息</el-button>
+                <el-button @click="goProfile" plain>个人信息</el-button>
                 <el-button plain>Gitee</el-button>
                 <el-button plain>GitHub</el-button>
                 <el-button @click="loginOut" plain>退出登录</el-button>
@@ -86,6 +86,10 @@ const changeCollapseHandler = obj => {
   }
 
   isCollapse.value = !obj.isCollapse;
+};
+
+const goProfile = () => {
+  router.push("/profile");
 };
 </script>
 
