@@ -38,9 +38,24 @@ const getEmailCode = email => {
   return apiCilent.post("/user/sendCode", { email });
 };
 
+/**
+ * - 更新用户信息接口
+ * @param {Object} data - 传入对象
+ * @param {String} data.avatar - 头像
+ * @param {String} data.gender - 性别
+ * @param {String} data.phone - 手机号
+ * @param {String} data.bio - 个性签名
+ */
+const updateUser = data => {
+  console.log("data", data);
+
+  return apiCilent.patch("/profiles/updateProfile", data);
+};
+
 export default {
   getAllUser,
   register,
   login,
   getEmailCode,
+  updateUser,
 };

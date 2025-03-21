@@ -8,7 +8,7 @@
       class="uploadClass"
       drag
       :headers
-      action="http://127.0.0.1:3000/api/upload/"
+      :action="BaseURL"
       accept=".jpg,.png,.gif,.jpeg"
       :limit="10"
       list-type="picture"
@@ -32,6 +32,7 @@ import { useAuthStore } from "@/stores/user"; // 引入 Pinia 的 store
 import { ref } from "vue";
 import { ElMessage } from "element-plus";
 // 文件上传请求头
+const BaseURL = import.meta.env.VITE_SERVER_URL + "upload/";
 const authStore = useAuthStore(); // 获取 Pinia 中的 auth store
 const token = authStore.token; // 从 Pinia 中获取 token
 const headers = {
