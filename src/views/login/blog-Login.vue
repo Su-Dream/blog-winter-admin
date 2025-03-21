@@ -8,7 +8,6 @@
         :model="ruleForm"
         status-icon
         :rules="rules"
-        label-width="auto"
         class="blog-ruleForm"
       >
         <el-form-item prop="usnm">
@@ -131,7 +130,6 @@ const submitHandler = async () => {
     const profile = await userApi.getUserInfo();
     profileStore.setProfile(profile.data.rows);
     console.log("状态已保存", profileStore.profile);
-
     ElMessage({
       message: "登录成功!正在跳转页面...",
       type: "success",

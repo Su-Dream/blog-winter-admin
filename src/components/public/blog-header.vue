@@ -24,21 +24,29 @@
     <el-col :offset="9" :span="1">
       <div class="basic--circle">
         <div class="block">
-          <el-tooltip placement="bottom" effect="light">
-            <template #content>
-              <div class="user-info">
-                <el-button @click="goProfile" plain>个人信息</el-button>
-                <el-button plain>Gitee</el-button>
-                <el-button plain>GitHub</el-button>
-                <el-button @click="loginOut" plain>退出登录</el-button>
-              </div>
-            </template>
-            <el-avatar
-              v-if="profileStore.profile && profileStore.profile.UserProfile"
-              :size="40"
-              :src="profileStore.profile.UserProfile.avatar"
-            />
-          </el-tooltip>
+          <template
+            v-if="profileStore.profile && profileStore.profile.UserProfile"
+          >
+            <el-tooltip placement="bottom" effect="light">
+              <template #content>
+                <div class="user-info">
+                  <el-button @click="goProfile" plain>个人信息</el-button>
+                  <el-button plain>Gitee</el-button>
+                  <el-button plain>GitHub</el-button>
+                  <el-button @click="loginOut" plain>退出登录</el-button>
+                </div>
+              </template>
+              <el-avatar
+                :size="40"
+                :src="profileStore.profile.UserProfile.avatar"
+              />
+            </el-tooltip>
+          </template>
+          <el-avatar
+            v-else
+            :size="40"
+            src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"
+          />
         </div>
       </div>
     </el-col>
@@ -51,6 +59,7 @@ import { reactive, markRaw, ref, toRefs, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { useAuthStore } from "@/stores/user";
 import { useProfileStore } from "@/stores/profile";
+import { ElMessage } from "element-plus";
 import router from "@/routes";
 const route = useRoute();
 const profileStore = useProfileStore();
@@ -70,7 +79,7 @@ const isCollapse = ref(true);
 const titleValue = ref("星域");
 const isIcon = ref(markRaw(Grid));
 const changeCollapseHandler = obj => {
-  console.log(`changeCollapseHandler被执行了，数据为${obj}`);
+  console.log(`changeCollapseHandler被执行了，数据为`, obj);
   EventBus.emit("changeCollapse", obj);
   if (obj.titleValue === "星域") {
     titleValue.value = "星域管理系统";
