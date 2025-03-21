@@ -27,28 +27,19 @@
           />
         </template>
       </el-table-column>
-      <el-table-column label="昵称" width="100" prop="username" />
-      <el-table-column label="性别" width="80" prop="UserProfile.gender" />
+      <el-table-column label="昵称" prop="username" />
+      <el-table-column label="性别" prop="UserProfile.gender" />
       <el-table-column
         label="邮箱"
-        width="200"
         :show-overflow-tooltip="true"
         prop="email"
       />
-      <el-table-column label="联系电话" width="200" prop="UserProfile.phone" />
+      <el-table-column label="联系电话" prop="UserProfile.phone" />
       <el-table-column label="管理员" prop="role">
         <template #default="scope">
           <el-tag v-if="scope.row.role === 0" type="primary">用户</el-tag>
           <el-tag v-else type="danger">管理员</el-tag>
         </template>
-        <!-- <template #default="scope">
-          <el-switch
-            :active-value="1"
-            :inactive-value="0"
-            v-model="scope.row.role"
-            @change="handleRoleChange(scope.row)"
-          />
-        </template> -->
       </el-table-column>
       <el-table-column
         label="个性签名"
@@ -73,6 +64,7 @@
 <script setup>
 import { computed, ref } from "vue";
 import userApi from "@/apis/users.js";
+import { ElMessage } from "element-plus";
 
 // todo:修改管理员权限
 const handleRoleChange = async row => {
@@ -81,6 +73,16 @@ const handleRoleChange = async row => {
 // todo:用户封禁
 const onBanChange = async row => {
   console.log(row);
+  if (row.role === 0) {
+    row.isFlag = 0;
+    ElMessage.error("你没有权限封禁用户");
+    return;
+  }
+  if (row.role === 1) {
+    row.isFlag = 0;
+    ElMessage.error("您无法封禁管理员");
+    return;
+  }
 };
 // 搜索功能
 const search = ref("");
