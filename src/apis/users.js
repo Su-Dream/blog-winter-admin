@@ -57,6 +57,24 @@ const getEmailCode = email => {
 const updateUser = data => {
   return apiCilent.patch("/profiles/updateProfile", data);
 };
+/**
+ * - 封禁用户
+ * @param {Object} data - 传入对象
+ * @param {String} data.id - 用户id
+ * @param {String} data.isFlag - 封禁状态
+ */
+const banUser = data => {
+  return apiCilent.post("/user/ban", data);
+};
+/**
+ * - 设置用户权限
+ * @param {Object} data - 传入对象
+ * @param {String} data.id - 用户id
+ * @param {String} data.role - 用户权限
+ */
+const setUserRole = data => {
+  return apiCilent.post("/user/setRole", data);
+};
 
 export default {
   getAllUser,
@@ -65,4 +83,6 @@ export default {
   getEmailCode,
   updateUser,
   getUserInfo,
+  banUser,
+  setUserRole,
 };

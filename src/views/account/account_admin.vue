@@ -15,7 +15,7 @@
       <el-table-column label="头像" width="100" prop="UserProfile.avatar">
         <template #default="scope">
           <el-image
-            style="width: 100px; height: 100px"
+            style="width: 80px; height: 80px"
             :src="scope.row.UserProfile.avatar"
             :zoom-rate="1.2"
             :max-scale="7"
@@ -65,15 +65,16 @@
 import { computed, ref } from "vue";
 import userApi from "@/apis/users.js";
 import { ElMessage } from "element-plus";
-
+import { useProfileStore } from "@/stores/profile";
+const profileStore = useProfileStore();
 // todo:修改管理员权限
 const handleRoleChange = async row => {
   console.log(row);
 };
-// todo:用户封禁
+// 用户封禁
 const onBanChange = async row => {
-  console.log(row);
-  if (row.role === 0) {
+  console.log(profileStore.profile.role);
+  if (profileStore.profile.role === 0) {
     row.isFlag = 0;
     ElMessage.error("你没有权限封禁用户");
     return;
@@ -82,6 +83,15 @@ const onBanChange = async row => {
     row.isFlag = 0;
     ElMessage.error("您无法封禁管理员");
     return;
+  }
+  const result = await userApi.banUser({
+    userId: row.id,
+    isFlag: Number(row.isFlag),
+  });
+  if (row.isFlag === 1) {
+    ElMessage.error("已经封禁用户");
+  } else {
+    ElMessage.success("已经解封用户");
   }
 };
 // 搜索功能
