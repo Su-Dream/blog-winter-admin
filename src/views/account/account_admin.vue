@@ -67,10 +67,6 @@ import userApi from "@/apis/users.js";
 import { ElMessage } from "element-plus";
 import { useProfileStore } from "@/stores/profile";
 const profileStore = useProfileStore();
-// todo:修改管理员权限
-const handleRoleChange = async row => {
-  console.log(row);
-};
 // 用户封禁
 const onBanChange = async row => {
   console.log(profileStore.profile.role);

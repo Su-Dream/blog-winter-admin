@@ -2,6 +2,8 @@ import { createWebHistory, createRouter } from "vue-router";
 import { routes } from "./routes";
 import { decodeToken, validataToken } from "../utils/jwt";
 import { useAuthStore } from "@/stores/user";
+import { useProfileStore } from "@/stores/profile";
+import { ElMessage } from "element-plus";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -10,10 +12,13 @@ const router = createRouter({
 // 添加全局前置守卫，检查用户是否已登录
 router.beforeEach((to, from, next) => {
   const userStore = useAuthStore();
+  const profileStore = useProfileStore();
   const isToken = validataToken();
   console.log("isToken", isToken);
   if (!isToken && to.path !== "/login") {
-    userStore.removeToken();
+    ElMessage.error("Token已过期，请重新登录");
+    userStore.clearToken();
+    profileStore.clearProfile();
     return next("/login"); // 重定向到登录页
   }
   const result = decodeToken();
