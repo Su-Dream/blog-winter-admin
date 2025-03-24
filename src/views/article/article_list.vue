@@ -1,5 +1,6 @@
 <template>
   <div class="article_list">
+    <article-toast />
     <div class="header"></div>
     <div class="main">
       <!-- 文章列表 -->
@@ -68,10 +69,8 @@
 
 <script setup>
 import artApi from "@/apis/article";
-import tagApi from "@/apis/tags";
-import categoryApi from "@/apis/types";
 import { ref, onMounted } from "vue";
-
+import articleToast from "./components/articleToast.vue";
 // 总条数
 const total = ref(0);
 // 当前页
@@ -81,10 +80,6 @@ const pageSize = ref(5);
 
 // 文章列表
 const tableData = ref([]);
-// 分类列表
-const categoryList = ref([]);
-// 标签列表
-const tagList = ref([]);
 
 // 获取文章列表
 const getArticleList = async () => {
@@ -97,16 +92,7 @@ const getArticleList = async () => {
   }));
   total.value = res.data.total;
 };
-// 获取分类列表
-const getCategoryList = async () => {
-  const res = await categoryApi.getTypes();
-  categoryList.value = res.data.rows;
-};
-// 获取标签列表
-const getTagList = async () => {
-  const res = await tagApi.getTags();
-  tagList.value = res.data.tags;
-};
+
 // 编辑
 const handleEdit = row => {
   console.log(row);
@@ -121,7 +107,7 @@ const handleCurrentChange = size => {
 };
 // 初始化数据
 onMounted(() => {
-  Promise.all([getArticleList(), getCategoryList(), getTagList()]);
+  getArticleList();
 });
 </script>
 
