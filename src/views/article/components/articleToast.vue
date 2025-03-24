@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="visible" title="文章详情" width="50%">
+  <el-dialog v-model="visible" title="文章详情" width="70%">
     <el-form :model="article" label-width="120px">
       <el-form-item>
         <custom-upload @upload="onUpload" />
@@ -33,7 +33,15 @@
         </el-select>
       </el-form-item>
       <el-form-item label="内容">
-        <el-input v-model="article.content" type="textarea" />
+        <edit-text v-model="article.content" />
+      </el-form-item>
+      <el-form-item>
+        <div style="margin-left: auto">
+          <el-button type="primary" @click="onSubmit">保存文章</el-button>
+          <el-button type="info" @click="() => (visible = false)">
+            取消
+          </el-button>
+        </div>
       </el-form-item>
     </el-form>
   </el-dialog>
@@ -43,6 +51,7 @@ import { ref, onMounted } from "vue";
 import categoryApi from "@/apis/types";
 import tagApi from "@/apis/tags";
 import customUpload from "./customUpload.vue";
+import editText from "@/components/edit/editText.vue";
 // 分类列表
 const categoryList = ref([]);
 // 标签列表
@@ -64,33 +73,22 @@ const getTagList = async () => {
 const visible = ref(true);
 // 文章详情
 const article = ref({
-  id: "079de155-bdf4-4830-8aac-8d97bf41c336",
-  title: "测试文章2",
-  content: "今天天气真好2",
-  author_id: "22f331ba-1891-4e42-8f3b-5438c56fd146",
-  category_id: "340c1db5-8b66-4b8c-a2ed-f33f426382c9",
-  picture: "test",
-  createdAt: "2024-12-18T08:12:53.000Z",
-  updatedAt: "2024-12-18T08:12:53.000Z",
-  Category: {
-    id: "340c1db5-8b66-4b8c-a2ed-f33f426382c9",
-    name: "娱乐",
-  },
-  Tags: [
-    {
-      id: "58e8cf41-84fc-4bff-bb12-a23c3e9fe362",
-      name: "css",
-    },
-    {
-      id: "921ddf70-488c-4989-8550-1ea2ea41d9bf",
-      name: "javascript",
-    },
-    {
-      id: "e509525e-2fe3-46bd-abf5-2c7ec6c521fa",
-      name: "html",
-    },
-  ],
+  id: "",
+  title: "",
+  content: "",
+  author_id: "",
+  category_id: "",
+  picture: "",
+  createdAt: "",
+  updatedAt: "",
+  Category: {},
+  Tags: [],
 });
+// 更新/发布文章
+const onSubmit = () => {
+  console.log(article.value);
+};
+
 // 初始化数据
 onMounted(() => {
   getCategoryList();
