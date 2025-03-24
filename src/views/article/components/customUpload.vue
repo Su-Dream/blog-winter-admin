@@ -43,7 +43,7 @@ const emit = defineEmits(["upload"]);
 const onSuccess = (res, uploadFile, uploadFiles) => {
   ElMessage.success("上传成功");
   defaultImage.value = res.data.url;
-  console.log("返回地址", res.data.url);
+  console.log("返回地址", defaultImage.value);
   // 触发事件传结果给父组件
   emit("upload", res.data.url);
 };

@@ -8,7 +8,7 @@
         <el-input v-model="article.title" />
       </el-form-item>
       <el-form-item label="分类">
-        <el-select v-model="article.Category.id" placeholder="请选择分类">
+        <el-select v-model="article.category_id" placeholder="请选择分类">
           <el-option
             v-for="item in categoryList"
             :key="item.id"
@@ -19,6 +19,7 @@
       </el-form-item>
       <el-form-item label="标签">
         <el-select
+          @change="onChangeTag"
           multiple
           :multiple-limit="3"
           v-model="currentTagList"
@@ -52,6 +53,7 @@ import categoryApi from "@/apis/types";
 import tagApi from "@/apis/tags";
 import customUpload from "./customUpload.vue";
 import editText from "@/components/edit/editText.vue";
+
 // 分类列表
 const categoryList = ref([]);
 // 标签列表
@@ -68,7 +70,10 @@ const getTagList = async () => {
   const res = await tagApi.getTags();
   tagList.value = res.data.tags;
 };
-
+// 标签选择变化
+const onChangeTag = () => {
+  article.value.Tags = currentTagList.value;
+};
 // 文章模态框状态
 const visible = ref(true);
 // 文章详情
@@ -81,8 +86,14 @@ const article = ref({
   picture: "",
   createdAt: "",
   updatedAt: "",
-  Category: {},
+  Category: "",
   Tags: [],
+});
+// 暴露子组件的文章实例和模态框状态
+defineExpose({
+  article,
+  visible,
+  currentTagList,
 });
 // 更新/发布文章
 const onSubmit = () => {
@@ -93,10 +104,8 @@ const onSubmit = () => {
 onMounted(() => {
   getCategoryList();
   getTagList();
-  // 初始化标签列表
-  currentTagList.value = article.value.Tags.map(v => v.id);
 });
-// 上传成功
+// 上传封面图成功
 const onUpload = url => {
   console.log(url);
   article.value.picture = url;

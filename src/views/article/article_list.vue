@@ -1,7 +1,10 @@
 <template>
   <div class="article_list">
-    <article-toast />
-    <div class="header"></div>
+    <article-toast ref="childRef" />
+    <div class="header">
+      <!-- 发布文章 -->
+      <el-button type="primary" @click="onSendArt">发布文章</el-button>
+    </div>
     <div class="main">
       <!-- 文章列表 -->
       <div class="article_list_table">
@@ -80,7 +83,7 @@ const pageSize = ref(5);
 
 // 文章列表
 const tableData = ref([]);
-
+const article = ref({});
 // 获取文章列表
 const getArticleList = async () => {
   const res = await artApi.getUserArtList(page.value, pageSize.value);
@@ -92,14 +95,37 @@ const getArticleList = async () => {
   }));
   total.value = res.data.total;
 };
+// 获取子组件实例
+const childRef = ref(null);
 
-// 编辑
-const handleEdit = row => {
-  console.log(row);
+// 发布文章
+const onSendArt = () => {
+  childRef.value.visible = true;
+  Object.assign(childRef.value.article, {
+    id: "",
+    title: "",
+    content: "",
+    author_id: "",
+    category_id: "",
+    picture: "",
+    createdAt: "",
+    updatedAt: "",
+    Category: "",
+    Tags: [],
+  });
 };
-// 删除
+// 编辑文章
+const handleEdit = row => {
+  console.log(row, childRef.value);
+  // 数据回显
+  Object.assign(childRef.value.article, row);
+  childRef.value.currentTagList = row.Tags.map(v => v.id);
+  childRef.value.visible = true;
+};
+// 删除文章
 const handleDelete = row => {
-  console.log(row);
+  // 删除文章
+  console.log(row.id);
 };
 // 分页
 const handleCurrentChange = size => {
@@ -114,7 +140,7 @@ onMounted(() => {
 <style scoped>
 .article_list {
   width: 100%;
-  padding: 8px 0;
+  padding: 16px;
   background-color: #fff;
 }
 .footer {
