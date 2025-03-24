@@ -2,10 +2,16 @@ import apiCilent from "./index";
 
 /**
  * - 查询当前登录用户的文章列表
- * @returns {Promise}  查询结果
+ * @param {Object} data - 包含分页信息的对象
+ * @returns {Promise} 查询结果
  */
-const getUserArtList = () => {
-  return apiCilent.get("/post");
+const getUserArtList = (page = 1, pageSize = 5) => {
+  return apiCilent.get("/post", {
+    params: {
+      page,
+      pageSize,
+    },
+  });
 };
 /**
  * - 查询指定文章详情
