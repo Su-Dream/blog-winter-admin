@@ -51,6 +51,7 @@
 import { ref, onMounted, watch } from "vue";
 import categoryApi from "@/apis/types";
 import tagApi from "@/apis/tags";
+import articleApi from "@/apis/article";
 import customUpload from "./customUpload.vue";
 import editText from "@/components/edit/editText.vue";
 import { isUrl } from "@/utils/util";
@@ -113,25 +114,34 @@ const validataArt = () => {
   return true;
 };
 // 更新/发布文章
-const onSubmit = () => {
+const onSubmit = async () => {
   if (!validataArt()) {
     return;
   }
   // 如果有id，则是更新文章
   if (article.value.id) {
+    const params = {
+      id: article.value.id,
+      title: article.value.title,
+      content: article.value.content,
+      category_id: article.value.category_id,
+      picture: article.value.picture,
+      tags: article.value.Tags,
+    };
+    console.log("更新文章", params);
+    // 更新文章
+    await articleApi.updateArt(params);
     ElMessage({
-      message: "更新成功",
+      message: "更新文章成功",
       type: "success",
     });
-    // 更新文章
-    console.log(article.value);
   } else {
     // 发布文章
+    await articleApi.addArt(article.value);
     ElMessage({
-      message: "发布成功",
+      message: "发布文章成功",
       type: "success",
     });
-    console.log(article.value);
   }
   visible.value = false;
 };

@@ -49,9 +49,18 @@
               <el-button type="primary" @click="handleEdit(scope.row)"
                 >编辑</el-button
               >
-              <el-button type="danger" @click="handleDelete(scope.row)"
-                >删除</el-button
+              <el-popconfirm
+                confirm-button-text="Yes"
+                cancel-button-text="No"
+                :icon="InfoFilled"
+                icon-color="#626AEF"
+                title="确定删除该文章吗？"
+                @confirm="handleDelete(scope.row)"
               >
+                <template #reference>
+                  <el-button type="danger">删除</el-button>
+                </template>
+              </el-popconfirm>
             </template>
           </el-table-column>
         </el-table>
@@ -123,9 +132,15 @@ const handleEdit = row => {
   childRef.value.visible = true;
 };
 // 删除文章
-const handleDelete = row => {
+const handleDelete = async row => {
   // 删除文章
   console.log(row.id);
+  await artApi.deleteArt(row.id);
+  getArticleList();
+  ElMessage({
+    message: "删除文章成功",
+    type: "success",
+  });
 };
 // 分页
 const handleCurrentChange = size => {
