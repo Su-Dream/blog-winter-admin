@@ -39,6 +39,9 @@ const headers = {
 const props = defineProps(["picture"]);
 // 定义上传事件
 const emit = defineEmits(["upload"]);
+defineExpose({
+  defaultImage,
+});
 // 上传成功
 const onSuccess = (res, uploadFile, uploadFiles) => {
   ElMessage.success("上传成功");

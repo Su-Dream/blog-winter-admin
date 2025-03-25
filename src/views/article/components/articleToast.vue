@@ -2,7 +2,7 @@
   <el-dialog v-model="visible" title="文章详情" width="70%">
     <el-form :model="article" label-width="120px">
       <el-form-item>
-        <custom-upload @upload="onUpload" />
+        <custom-upload ref="customUploadRef" @upload="onUpload" />
       </el-form-item>
       <el-form-item label="标题">
         <el-input v-model="article.title" />
@@ -48,7 +48,7 @@
   </el-dialog>
 </template>
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import categoryApi from "@/apis/types";
 import tagApi from "@/apis/tags";
 import customUpload from "./customUpload.vue";
@@ -76,6 +76,7 @@ const onChangeTag = () => {
 };
 // 文章模态框状态
 const visible = ref(true);
+const customUploadRef = ref(null);
 // 文章详情
 const article = ref({
   id: "",
@@ -95,10 +96,51 @@ defineExpose({
   visible,
   currentTagList,
 });
+// 校验发布时候的必填项
+const validataArt = () => {
+  const validataList = ["title", "category_id", "content"];
+  for (const item of validataList) {
+    if (article.value[item].trim() == "") {
+      ElNotification({
+        title: "Warning",
+        message: `标题|内容|分类不能为空`,
+        type: "warning",
+      });
+      return false;
+    }
+  }
+  return true;
+};
 // 更新/发布文章
 const onSubmit = () => {
-  console.log(article.value);
+  if (!validataArt()) {
+    return;
+  }
+  // 如果有id，则是更新文章
+  if (article.value.id) {
+    ElMessage({
+      message: "更新成功",
+      type: "success",
+    });
+    // 更新文章
+    console.log(article.value);
+  } else {
+    // 发布文章
+    ElMessage({
+      message: "发布成功",
+      type: "success",
+    });
+    console.log(article.value);
+  }
+  visible.value = false;
 };
+
+// 同步封面图
+watch(visible, () => {
+  if (visible.value && article.value.picture.trim() != "") {
+    customUploadRef.value.defaultImage = article.value.picture;
+  }
+});
 
 // 初始化数据
 onMounted(() => {
