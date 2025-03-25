@@ -53,6 +53,7 @@ import categoryApi from "@/apis/types";
 import tagApi from "@/apis/tags";
 import customUpload from "./customUpload.vue";
 import editText from "@/components/edit/editText.vue";
+import { isUrl } from "@/utils/util";
 
 // 分类列表
 const categoryList = ref([]);
@@ -75,7 +76,7 @@ const onChangeTag = () => {
   article.value.Tags = currentTagList.value;
 };
 // 文章模态框状态
-const visible = ref(true);
+const visible = ref(false);
 const customUploadRef = ref(null);
 // 文章详情
 const article = ref({
@@ -137,8 +138,14 @@ const onSubmit = () => {
 
 // 同步封面图
 watch(visible, () => {
-  if (visible.value && article.value.picture.trim() != "") {
+  // console.log(isUrl(article.value.picture));
+  // console.log(customUploadRef.value);
+  // 没有实例化上传组件就不同步
+  if (!customUploadRef.value) return;
+  if (visible.value && isUrl(article.value.picture)) {
     customUploadRef.value.defaultImage = article.value.picture;
+  } else {
+    customUploadRef.value.defaultImage = "";
   }
 });
 

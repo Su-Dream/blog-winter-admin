@@ -1,6 +1,7 @@
 // src/apis/index.js
 import axios from "axios";
 import { useAuthStore } from "@/stores/user"; // 引入 Pinia 的 store
+import { useProfileStore } from "@/stores/profile";
 import router from "@/routes";
 
 // 创建一个 axios 实例
@@ -37,12 +38,11 @@ apiClient.interceptors.response.use(
     if (error.response && error.response.status === 401) {
       console.log("Token 无效或已过期");
       const authStore = useAuthStore(); // 获取 Pinia 中的 auth store
-      authStore.removeToken(); // 清除 Pinia 中的 token
+      authStore.clearToken(); // 清除 Pinia 中的 token
+      const profileStore = useProfileStore(); // 获取 Pinia 中的 profile store
+      profileStore.clearProfile(); // 清除 Pinia 中的 profile
       // 在这里跳转到登录页
       router.push("/login");
-      // 你还可以清除本地存储的 token（如果需要）
-      localStorage.removeItem("token");
-      // 可以选择进一步处理，比如清除全局状态等
     }
     return Promise.reject(error);
   }
