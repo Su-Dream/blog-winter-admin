@@ -38,7 +38,9 @@
       </el-form-item>
       <el-form-item>
         <div style="margin-left: auto">
-          <el-button type="primary" @click="onSubmit">保存文章</el-button>
+          <el-button type="primary" @click="onSubmit">
+            {{ article.id ? "更新文章" : "发布文章" }}
+          </el-button>
           <el-button type="info" @click="() => (visible = false)">
             取消
           </el-button>
@@ -144,6 +146,8 @@ const onSubmit = async () => {
     });
   }
   visible.value = false;
+  // 刷新文章列表
+  getArticleList();
 };
 
 // 同步封面图
