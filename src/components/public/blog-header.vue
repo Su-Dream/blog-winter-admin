@@ -31,8 +31,16 @@
               <template #content>
                 <div class="user-info">
                   <el-button @click="goProfile" plain>个人信息</el-button>
-                  <el-button plain>Gitee</el-button>
-                  <el-button plain>GitHub</el-button>
+                  <el-button
+                    @click="goUrl(profileStore.profile.UserProfile.gitee)"
+                    plain
+                    >Gitee</el-button
+                  >
+                  <el-button
+                    @click="goUrl(profileStore.profile.UserProfile.github)"
+                    plain
+                    >GitHub</el-button
+                  >
                   <el-button @click="loginOut" plain>退出登录</el-button>
                 </div>
               </template>
@@ -94,6 +102,9 @@ const changeCollapseHandler = obj => {
 
 const goProfile = () => {
   router.push("/profile");
+};
+const goUrl = url => {
+  window.open(url, "_blank");
 };
 </script>
 
