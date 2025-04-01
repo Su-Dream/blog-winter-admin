@@ -60,12 +60,25 @@
           ></el-input>
         </el-form-item>
 
-        <el-form-item label="个人简介">
+        <el-form-item class="userBio" label="个人简介">
           <el-input
             v-model="form.bio"
             type="textarea"
             :rows="4"
             placeholder="请输入个人简介"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="Gitee">
+          <el-input
+            v-model="form.gitee"
+            placeholder="请输入gitee地址"
+          ></el-input>
+        </el-form-item>
+
+        <el-form-item label="GitHub">
+          <el-input
+            v-model="form.github"
+            placeholder="请输入github地址"
           ></el-input>
         </el-form-item>
 
@@ -109,6 +122,8 @@ const form = reactive({
   gender: "",
   phone: "",
   bio: "",
+  gitee: "",
+  github: "",
 });
 
 // 获取用户信息
@@ -134,6 +149,8 @@ const fetchUserProfile = async () => {
   form.isFlag = userData.isFlag;
   form.createdAt = userData.createdAt;
   form.updatedAt = userData.updatedAt;
+  form.gitee = userData.gitee;
+  form.github = userData.github;
 
   // 个人资料数据
   if (userData.UserProfile) {
@@ -141,6 +158,8 @@ const fetchUserProfile = async () => {
     form.gender = userData.UserProfile.gender;
     form.phone = userData.UserProfile.phone;
     form.bio = userData.UserProfile.bio;
+    form.gitee = userData.UserProfile.gitee;
+    form.github = userData.UserProfile.github;
   }
 };
 
@@ -153,6 +172,8 @@ const saveProfile = async () => {
       gender: form.gender,
       phone: form.phone,
       bio: form.bio,
+      gitee: form.gitee,
+      github: form.github,
       // 如果有新上传的头像文件
       ...(avatarUrl.value && { avatar: avatarUrl.value }),
     };
@@ -221,6 +242,16 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.el-form-item {
+  display: flex;
+  align-items: center;
+}
+:deep(.el-form-item__label) {
+  margin-bottom: 0px !important;
+}
+.userBio {
+  display: block;
+}
 .profile-container {
   padding: 20px;
   display: flex;
