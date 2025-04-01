@@ -31,10 +31,10 @@
           <el-menu-item index="/article/tags">标签列表</el-menu-item>
           <el-menu-item index="/article/types">分类列表</el-menu-item>
         </el-sub-menu>
-        <el-menu-item index="/comments">
+        <!-- <el-menu-item index="/comments">
           <el-icon><ChatDotSquare /></el-icon>
           <template #title>评论管理</template>
-        </el-menu-item>
+        </el-menu-item> -->
         <el-menu-item index="/friendLinks">
           <el-icon><Link /></el-icon>
           <template #title>友链管理</template>
