@@ -29,13 +29,14 @@ const delType = id => {
 };
 
 /**
- * - 修改分类名
- * @param {String} id - 分类id
- * @param {String} name - 分类名
- * @returns 修改结果
+ * - 更新分类名
+ * @param {Object} data - 更新的数据，包含name字段
+ * @param {String} data.id - 分类id
+ * @param {String} data.name - 分类名
+ * @returns 更新结果
  */
-const updateType = (id, data) => {
-  return apiCilent.put("/category/update", { id, data });
+const updateType = data => {
+  return apiCilent.put("/category/update", data);
 };
 
 export default {

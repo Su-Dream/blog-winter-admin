@@ -13,21 +13,33 @@
       <el-button type="primary" @click="dialogVisible = true">
         添加分类
       </el-button>
-      <el-dialog v-model="dialogVisible" title="新增分类" width="500">
+      <!-- 添加分类弹窗 -->
+      <el-dialog
+        v-model="dialogVisible"
+        :title="params.id == '' ? '添加分类' : '编辑分类'"
+        width="500"
+      >
         <el-form-item label="分类名称:">
-          <el-input v-model="typeName" placeholder="请输入需要添加的分类名">
+          <el-input
+            v-model="typeName"
+            :placeholder="
+              params.id == ''
+                ? '请输入需要添加的分类名'
+                : '请输入需要修改的分类名'
+            "
+          >
           </el-input>
         </el-form-item>
         <template #footer>
           <div class="dialog-footer">
             <el-button @click="dialogVisible = false">Cancel</el-button>
-            <el-button type="primary" @click="addArtType()"> OK </el-button>
+            <el-button type="primary" @click="submitArtType()"> OK </el-button>
           </div>
         </template>
       </el-dialog>
     </div>
     <div class="art_types_list">
-      <el-table size="large" :data="artTypeList" style="width: 100%">
+      <el-table size="large" :data="filteredArtTypeList" style="width: 100%">
         <el-table-column prop="name" label="分类名称"> </el-table-column>
         <el-table-column
           prop="createdAt"
@@ -37,6 +49,11 @@
         <el-table-column label="操作">
           <template #default="scope">
             <div class="edit">
+              <el-button
+                type="primary"
+                @click="editArtType(scope.$index, scope.row)"
+                >编辑</el-button
+              >
               <el-popconfirm
                 title="确定删除这个分类?不可恢复!"
                 @confirm="handleDelete(scope.$index, scope.row)"
@@ -54,39 +71,65 @@
 </template>
 
 <script setup>
-import { ref, reactive } from "vue";
-import { Edit, Delete } from "@element-plus/icons-vue";
+import { ref, reactive, computed } from "vue";
 import typeApi from "@/apis/types.js";
 import { ElMessage } from "element-plus";
 const search = ref("");
 const typeName = ref("");
 const dialogVisible = ref(false);
-// 添加分类
-const addArtType = async () => {
+const params = ref({
+  id: "",
+  name: "",
+});
+// 搜索功能
+const filteredArtTypeList = computed(() => {
+  if (!search.value) {
+    return artTypeList.value;
+  }
+  return artTypeList.value.filter(item =>
+    item.name.toLowerCase().includes(search.value.toLowerCase())
+  );
+});
+
+// 统一提交分类
+const submitArtType = async () => {
   if (!typeName.value) {
     ElMessage.error("分类内容不能为空");
     return;
   }
-  dialogVisible.value = false;
-  // 发送请求添加分类
-  const result = await typeApi.addType(typeName.value);
-  // ElMessage.success(result.message);
-  if (result.code === 200) {
-    ElMessage.success(result.message);
+  // 判断是添加还是编辑
+  if (params.value.id) {
+    // 编辑分类
+    await typeApi.updateType({ id: params.value.id, name: typeName.value });
+    ElMessage.success("编辑分类成功");
+    params.value.id = "";
+    params.value.name = "";
   } else {
-    ElMessage.error(result.message);
+    // 添加分类
+    await typeApi.addType(typeName.value);
+    ElMessage.success("添加分类成功");
   }
-  console.log("addType", result);
+  dialogVisible.value = false;
   // 添加完成后将分类清空然后刷新列表
   get_type_list();
   typeName.value = "";
+};
+// 编辑分类
+const editArtType = async (index, row) => {
+  console.log(row);
+  dialogVisible.value = true;
+  params.value.id = row.id;
+  params.value.name = row.name;
+  // 数据回显
+  typeName.value = params.value.name;
+  console.log("typeName", typeName.value);
 };
 // 删除分类
 const handleDelete = async (index, row) => {
   console.log(row.id);
   try {
     await typeApi.delType(row.id);
-    ElMessage("删除分页成功");
+    ElMessage.success("删除分类成功");
   } catch (error) {
     console.log(error);
     ElMessage.error(error.message);
