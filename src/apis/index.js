@@ -44,7 +44,7 @@ apiClient.interceptors.response.use(
       // 在这里跳转到登录页
       router.push("/login");
     }
-    return Promise.reject(error);
+    return Promise.reject(error.response.data);
   }
 );
 

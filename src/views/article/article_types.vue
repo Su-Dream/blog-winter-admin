@@ -61,31 +61,41 @@ import { ElMessage } from "element-plus";
 const search = ref("");
 const typeName = ref("");
 const dialogVisible = ref(false);
-// ?添加分类
+// 添加分类
 const addArtType = async () => {
   if (!typeName.value) {
-    ElMessage("分类内容呢？");
+    ElMessage.error("分类内容不能为空");
     return;
   }
   dialogVisible.value = false;
   // 发送请求添加分类
   const result = await typeApi.addType(typeName.value);
+  // ElMessage.success(result.message);
+  if (result.code === 200) {
+    ElMessage.success(result.message);
+  } else {
+    ElMessage.error(result.message);
+  }
   console.log("addType", result);
   // 添加完成后将分类清空然后刷新列表
   get_type_list();
   typeName.value = "";
 };
-// ?删除分类
+// 删除分类
 const handleDelete = async (index, row) => {
   console.log(row.id);
-  const result = await typeApi.delType(row.id);
-  console.log(result);
-  ElMessage("删除成功了捏");
+  try {
+    await typeApi.delType(row.id);
+    ElMessage("删除分页成功");
+  } catch (error) {
+    console.log(error);
+    ElMessage.error(error.message);
+  }
   get_type_list();
 };
-// *分类列表
+// 分类列表
 let artTypeList = ref([]);
-// ?获取分类列表
+// 获取分类列表
 const get_type_list = async () => {
   const result = await typeApi.getTypes();
   console.log(result.data);

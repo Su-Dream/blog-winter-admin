@@ -131,6 +131,10 @@ const handleEdit = row => {
   Object.assign(childRef.value.article, row);
   childRef.value.currentTagList = row.Tags.map(v => v.id);
   childRef.value.visible = true;
+  // 确保图片同步
+  setTimeout(() => {
+    childRef.value.syncImage();
+  }, 0);
 };
 // 删除文章
 const handleDelete = async row => {

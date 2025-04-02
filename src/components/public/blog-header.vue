@@ -71,7 +71,7 @@ import { ElMessage } from "element-plus";
 import router from "@/routes";
 const route = useRoute();
 const profileStore = useProfileStore();
-// ?登出操作
+// 登出操作
 const loginOut = () => {
   const userStore = useAuthStore();
   userStore.clearToken();
@@ -80,7 +80,7 @@ const loginOut = () => {
   router.push("/login");
 };
 
-// ?:点击切换侧边栏
+// 点击切换侧边栏
 
 import EventBus from "@/utils/event-bus.js";
 const isCollapse = ref(true);
@@ -99,10 +99,11 @@ const changeCollapseHandler = obj => {
 
   isCollapse.value = !obj.isCollapse;
 };
-
+// 跳转个人中心
 const goProfile = () => {
   router.push("/profile");
 };
+// 跳转链接
 const goUrl = url => {
   window.open(url, "_blank");
 };
