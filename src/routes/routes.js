@@ -6,10 +6,10 @@ import ArtTags from "@/views/article/article_tags.vue";
 import ArtTypes from "@/views/article/article_types.vue";
 import ImgUpload from "@/views/images/imagesUpload.vue";
 import ImgList from "@/views/images/images.vue";
-import Comments from "@/views/comments/comments.vue";
 import FriendLinks from "@/views/friendLinks/friendLinks.vue";
 import Setting from "@/views/setting/setting.vue";
 import Profile from "@/views/profile/profile.vue";
+import Chat from "@/views/chat/chat.vue";
 export const routes = [
   { path: "/", redirect: "/login" },
   {
@@ -65,14 +65,14 @@ export const routes = [
     ],
   },
   {
-    path: "/comments",
-    component: Comments,
-    meta: { title: "评论管理", requiresAuth: true, role: ["admin"] },
-  },
-  {
     path: "/friendLinks",
     component: FriendLinks,
     meta: { title: "友链管理", requiresAuth: true, role: ["admin"] },
+  },
+  {
+    path: "/chat",
+    component: Chat,
+    meta: { title: "智能对话", requiresAuth: true, role: ["user", "admin"] },
   },
   {
     path: "/setting",

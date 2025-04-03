@@ -51,6 +51,10 @@
           <el-menu-item index="/images/upload">图片上传</el-menu-item>
           <el-menu-item index="/images/list">图片列表</el-menu-item>
         </el-sub-menu>
+        <el-menu-item index="/chat">
+          <el-icon><ChatDotSquare /></el-icon>
+          <template #title>智能对话</template>
+        </el-menu-item>
         <el-menu-item index="/profile">
           <el-icon><setting /></el-icon>
           <template #title>个人设置</template>
