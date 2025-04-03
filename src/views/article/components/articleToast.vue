@@ -99,8 +99,7 @@ import tagApi from "@/apis/tags";
 import articleApi from "@/apis/article";
 import customUpload from "./customUpload.vue";
 import editText from "@/components/edit/editText.vue";
-import { isUrl } from "@/utils/util";
-
+import { isUrl, getUserToken } from "@/utils/util";
 // 分类列表
 const categoryList = ref([]);
 // 标签列表
@@ -170,6 +169,8 @@ const validataArt = () => {
   return isValid;
 };
 
+// llm请求地址
+const BASEURL = import.meta.env.VITE_SERVER_URL + "llm/chat";
 // 生成AI描述
 const generateAIDescription = async () => {
   if (!article.value.content) {
@@ -182,25 +183,81 @@ const generateAIDescription = async () => {
 
   try {
     isGeneratingDescription.value = true;
-    // 这里假设有一个AI API服务
-    // 实际实现时需要替换为真实的API调用
-    const response = await fetch("/api/ai/generate-description", {
+    // 准备请求参数
+    const option = {
       method: "POST",
+      stream: true, // 启用流式传输
       headers: {
+        Authorization: `Bearer ${getUserToken()}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        title: article.value.title,
-        content: article.value.content,
+        message: `请你将以下内容生成一段描述，描述不超过100字,并且不需要出现与描述无关的词：${article.value.content}`,
+        model: "deepseek-ai/DeepSeek-V3",
       }),
-    });
+    };
 
+    // 创建一个临时的响应内容变量
+    let responseContent = "";
+
+    // 发送请求并处理流式响应
+    const response = await fetch(BASEURL, option);
+    console.log("response", response);
+    // 处理流式响应数据
+    // 检查响应状态
     if (!response.ok) {
-      throw new Error("AI服务请求失败");
+      ElMessage.error("发送消息失败，请稍后重试");
+      return;
     }
 
-    const data = await response.json();
-    article.value.description = data.description;
+    // 获取响应的可读流
+    const reader = response.body.getReader();
+    // 解码器
+    const decoder = new TextDecoder("utf-8");
+
+    // 读取流中的数据
+    while (true) {
+      const { done, value } = await reader.read();
+      // 如果数据读取完则退出循环
+      if (done) break;
+
+      // 解码并发送给客户端
+      const chunk = decoder.decode(value, { stream: true });
+      // console.log("chunk", chunk);
+
+      // 解析数据流中的JSON数据
+      const lines = chunk.split("\n").filter(line => line.trim() !== "");
+      for (const line of lines) {
+        if (line.startsWith("data: ")) {
+          // 检查是否是结束标记
+          if (line.includes("[DONE]")) {
+            console.log("传输流结束");
+            continue;
+          }
+          try {
+            // 解析JSON数据
+            const jsonData = JSON.parse(line.substring(6));
+            if (jsonData.choices[0].delta.reasoning_content !== null) {
+              responseContent += jsonData.choices[0].delta.reasoning_content;
+            } else {
+              responseContent += jsonData.choices[0].delta.content;
+            }
+
+            // 更新描述内容
+            article.value.description = responseContent;
+            console.log(article.value.description);
+          } catch (e) {
+            console.error(
+              "解析JSON数据失败:",
+              e,
+              "原始数据:",
+              line.substring(6)
+            );
+          }
+        }
+      }
+    }
+
     descriptionError.value = "";
   } catch (error) {
     console.error("生成AI描述失败:", error);
