@@ -67,6 +67,17 @@
         </el-table-column>
       </el-table>
     </div>
+    <!-- 分页 -->
+    <div class="footer">
+      <!-- 分页 -->
+      <el-pagination
+        background
+        v-model:current-page="page"
+        v-model:page-size="pageSize"
+        :total="total"
+        @current-change="get_type_list"
+      />
+    </div>
   </div>
 </template>
 
@@ -76,6 +87,12 @@ import typeApi from "@/apis/types.js";
 import { ElMessage } from "element-plus";
 const search = ref("");
 const typeName = ref("");
+// 总条数
+const total = ref(0);
+// 当前页
+const page = ref(1);
+// 每页条数
+const pageSize = ref(5);
 const dialogVisible = ref(false);
 const params = ref({
   id: "",
@@ -140,13 +157,14 @@ const handleDelete = async (index, row) => {
 let artTypeList = ref([]);
 // 获取分类列表
 const get_type_list = async () => {
-  const result = await typeApi.getTypes();
+  const result = await typeApi.getTypes(page.value, pageSize.value);
   console.log(result.data);
-  artTypeList.value = result.data.rows.map(v => ({
+  artTypeList.value = result.data.rows.categories.map(v => ({
     ...v,
     createdAt: v.createdAt.replace("T", " ").replace(".000Z", ""),
     updatedAt: v.updatedAt.replace("T", " ").replace(".000Z", ""),
   }));
+  total.value = result.data.rows.total;
 };
 get_type_list();
 </script>
@@ -161,5 +179,10 @@ get_type_list();
   display: flex;
   column-gap: 1.25rem;
   justify-content: start;
+}
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 8px 16px;
 }
 </style>

@@ -4,8 +4,8 @@ import apiCilent from "./index";
  * - 查询全部分类
  * @returns 查询结果
  */
-const getTypes = () => {
-  return apiCilent.get("/category");
+const getTypes = (page, pageSize) => {
+  return apiCilent.get("/category", { params: { page, pageSize } });
 };
 
 /**
