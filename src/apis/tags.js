@@ -2,10 +2,12 @@ import apiCilent from "./index";
 
 /**
  * - 查询全部标签
+ * @param {Number} page - 当前页
+ * @param {Number} pageSize - 每页条数
  * @returns 查询结果
  */
-const getTags = () => {
-  return apiCilent.get("/tag");
+const getTags = (page, pageSize) => {
+  return apiCilent.get("/tag", { params: { page, pageSize } });
 };
 
 /**

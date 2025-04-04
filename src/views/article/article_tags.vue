@@ -59,6 +59,16 @@
         </el-table-column>
       </el-table>
     </div>
+    <!-- 分页 -->
+    <div class="footer">
+      <el-pagination
+        background
+        v-model:current-page="page"
+        v-model:page-size="pageSize"
+        :total="total"
+        @current-change="get_tag_list"
+      />
+    </div>
   </div>
 </template>
 
@@ -68,11 +78,18 @@ import { Edit, Delete } from "@element-plus/icons-vue";
 import tagApi from "@/apis/tags.js";
 const search = ref("");
 const tagName = ref("");
+// 总条数
+const total = ref(0);
+// 当前页
+const page = ref(1);
+// 每页条数
+const pageSize = ref(5);
+
 const dialogVisible = ref(false);
-// ?添加标签
+// 添加标签
 const addArtTag = async () => {
   if (tagName.value === "") {
-    ElMessage("标签内容呢？");
+    ElMessage("标签内容不能为空");
     return;
   }
   dialogVisible.value = false;
@@ -82,28 +99,29 @@ const addArtTag = async () => {
   // 添加完成后将分类清空然后刷新列表
   get_tag_list();
 
-  // !添加完成后吧标签名清空
+  // 添加完成后吧标签名清空
   tagName.value = "";
 };
 // 删除标签
 const handleDelete = async (index, row) => {
   console.log(row.id);
-  const result = await tagApi.delType(row.id);
+  const result = await tagApi.delTag(row.id);
   console.log(result);
-  ElMessage("删除成功了捏");
-  get_type_list();
+  ElMessage("删除成功了");
+  get_tag_list();
 };
-// 分类列表
+// 标签列表
 let artTagList = ref([]);
-// 获取分类列表
+// 获取标签列表
 const get_tag_list = async () => {
-  const result = await tagApi.getTags();
+  const result = await tagApi.getTags(page.value, pageSize.value);
   console.log(result.data);
   artTagList.value = result.data.tags.map(v => ({
     ...v,
     createdAt: v.createdAt.replace("T", " ").replace(".000Z", ""),
     updatedAt: v.updatedAt.replace("T", " ").replace(".000Z", ""),
   }));
+  total.value = result.data.total;
 };
 get_tag_list();
 </script>
@@ -118,5 +136,10 @@ get_tag_list();
   display: flex;
   column-gap: 1.25rem;
   justify-content: start;
+}
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 8px 16px;
 }
 </style>
