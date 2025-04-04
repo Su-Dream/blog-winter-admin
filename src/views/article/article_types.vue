@@ -69,7 +69,6 @@
     </div>
     <!-- 分页 -->
     <div class="footer">
-      <!-- 分页 -->
       <el-pagination
         background
         v-model:current-page="page"

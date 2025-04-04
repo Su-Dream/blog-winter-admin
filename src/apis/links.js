@@ -2,10 +2,12 @@ import apiCilent from "./index";
 
 /**
  * - 查询全部友链
+ * @param {Number} page - 当前页
+ * @param {Number} pageSize - 每页条数
  * @returns 查询结果
  */
-const getLinks = () => {
-  return apiCilent.get("/link");
+const getLinks = (page, pageSize) => {
+  return apiCilent.get("/link", { params: { page, pageSize } });
 };
 
 /**

@@ -3,6 +3,13 @@ import { ElMessage } from "element-plus";
 import Dialog from "./components/dialog.vue";
 import linkAPI from "@/apis/links.js";
 import { onMounted, ref } from "vue";
+// 总条数
+const total = ref(0);
+// 当前页
+const page = ref(1);
+// 每页条数
+const pageSize = ref(5);
+
 // 搜索输入
 const input = ref("");
 // 展示组件名
@@ -24,13 +31,13 @@ const onSearch = async () => {
 const links = ref();
 const filterLinks = ref([]);
 const getLinkData = async () => {
-  const res = await linkAPI.getLinks();
-  links.value = res.data.result.map(v => ({
+  const res = await linkAPI.getLinks(page.value, pageSize.value);
+  links.value = res.data.result.links.map(v => ({
     ...v,
     createdAt: v.createdAt.replace("T", " ").replace(".000Z", ""),
     updatedAt: v.updatedAt.replace("T", " ").replace(".000Z", ""),
   }));
-  console.log(links.value);
+  total.value = res.data.result.total;
 };
 onMounted(() => {
   getLinkData();
@@ -111,6 +118,16 @@ const onChange = async (page, pageSize) => {
           </el-table-column>
         </el-table>
       </div>
+    </div>
+    <!-- 分页 -->
+    <div class="footer">
+      <el-pagination
+        background
+        v-model:current-page="page"
+        v-model:page-size="pageSize"
+        :total="total"
+        @current-change="getLinkData"
+      />
     </div>
   </div>
 </template>
