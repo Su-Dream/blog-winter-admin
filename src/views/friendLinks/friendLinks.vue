@@ -32,12 +32,12 @@ const links = ref();
 const filterLinks = ref([]);
 const getLinkData = async () => {
   const res = await linkAPI.getLinks(page.value, pageSize.value);
-  links.value = res.data.result.links.map(v => ({
+  links.value = res.data.links.map(v => ({
     ...v,
     createdAt: v.createdAt.replace("T", " ").replace(".000Z", ""),
     updatedAt: v.updatedAt.replace("T", " ").replace(".000Z", ""),
   }));
-  total.value = res.data.result.total;
+  total.value = res.data.total;
 };
 onMounted(() => {
   getLinkData();

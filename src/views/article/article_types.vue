@@ -158,12 +158,12 @@ let artTypeList = ref([]);
 const get_type_list = async () => {
   const result = await typeApi.getTypes(page.value, pageSize.value);
   console.log(result.data);
-  artTypeList.value = result.data.rows.categories.map(v => ({
+  artTypeList.value = result.data.categories.map(v => ({
     ...v,
     createdAt: v.createdAt.replace("T", " ").replace(".000Z", ""),
     updatedAt: v.updatedAt.replace("T", " ").replace(".000Z", ""),
   }));
-  total.value = result.data.rows.total;
+  total.value = result.data.total;
 };
 get_type_list();
 </script>
