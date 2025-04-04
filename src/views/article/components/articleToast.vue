@@ -192,7 +192,7 @@ const generateAIDescription = async () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        message: `请你将以下内容生成一段描述，描述不超过100字,并且不需要出现与描述无关的词：${article.value.content}`,
+        message: `请你将以下内容生成一段摘要，摘要不超过100字,并且不需要出现与摘要无关的词，包括后面的（199字）：${article.value.content}`,
         model: "deepseek-ai/DeepSeek-V3",
       }),
     };
