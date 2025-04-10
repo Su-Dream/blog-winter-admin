@@ -113,7 +113,7 @@ const isGeneratingDescription = ref(false);
 // 获取分类列表
 const getCategoryList = async () => {
   const res = await categoryApi.getTypes();
-  categoryList.value = res.data.rows;
+  categoryList.value = res.data.categories;
 };
 // 获取标签列表
 const getTagList = async () => {
@@ -123,6 +123,7 @@ const getTagList = async () => {
 // 标签选择变化
 const onChangeTag = () => {
   article.value.Tags = currentTagList.value;
+  console.log("article.value.Tags", article.value.Tags);
 };
 // 文章模态框状态
 const visible = ref(false);
@@ -286,7 +287,7 @@ const onSubmit = async () => {
       content: article.value.content,
       category_id: article.value.category_id,
       picture: article.value.picture,
-      tags: article.value.Tags.map(item => item.id),
+      tags: article.value.Tags,
       description: article.value.description,
     };
     console.log("更新文章", params);
@@ -297,10 +298,13 @@ const onSubmit = async () => {
       type: "success",
     });
   } else {
-    console.log("文章发布了");
-
+    const params = {
+      ...article.value,
+      tags: article.value.Tags,
+    };
+    console.log("发布文章", params);
     // 发布文章
-    await articleApi.addArt(article.value);
+    await articleApi.addArt(params);
     ElMessage({
       message: "发布文章成功",
       type: "success",
