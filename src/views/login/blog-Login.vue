@@ -1,6 +1,6 @@
 <template>
   <div class="blog_login">
-    <div class="login">
+    <div v-if="isShowLogin" class="login">
       <h2>管理员登录</h2>
       <el-form
         ref="ruleFormRef"
@@ -44,7 +44,9 @@
           <div class="savePwd">
             <el-checkbox v-model="savePwd" label="记住密码" size="large" />
           </div>
-          <el-link :underline="false" type="primary">Forget Password</el-link>
+          <el-link :underline="false" @click="switchToRecovery" type="primary"
+            >Forget Password</el-link
+          >
         </div>
         <el-form-item>
           <el-button
@@ -53,6 +55,49 @@
             @click="submitForm(ruleFormRef)"
           >
             登录
+          </el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+    <!-- 找回密码 -->
+    <div v-else class="recovery">
+      <h2>找回密码</h2>
+      <el-form
+        ref="recoveryFormRef"
+        style="max-width: 600px"
+        :model="recoveryForm"
+        status-icon
+        :rules="recoveryRules"
+        class="blog-ruleForm"
+      >
+        <el-form-item prop="username">
+          <el-input
+            v-model="recoveryForm.username"
+            placeholder="请输入账号"
+            type="text"
+            autocomplete="off"
+          />
+        </el-form-item>
+        <el-form-item prop="email">
+          <el-input
+            v-model="recoveryForm.email"
+            placeholder="请输入注册邮箱"
+            type="email"
+            autocomplete="off"
+          />
+        </el-form-item>
+        <el-form-item>
+          <el-link type="primary" :underline="false" @click="switchToLogin"
+            >返回登录</el-link
+          >
+        </el-form-item>
+        <el-form-item>
+          <el-button
+            class="recovery-submit"
+            type="primary"
+            @click="submitRecoveryForm(recoveryFormRef)"
+          >
+            发送重置链接
           </el-button>
         </el-form-item>
       </el-form>
@@ -68,6 +113,8 @@ import { useAuthStore } from "@/stores/user.js";
 import router from "@/routes";
 import userApi from "@/apis/users.js";
 import { useProfileStore } from "../../stores/profile";
+// 是否显示登录
+const isShowLogin = ref(true);
 onMounted(() => {
   getCookieForm();
 });
@@ -169,6 +216,75 @@ const submitForm = formEl => {
     }
   });
 };
+
+// 找回密码相关
+const recoveryFormRef = ref();
+const recoveryForm = reactive({
+  username: "",
+  email: "",
+});
+
+const validateEmail = (rule, value, callback) => {
+  if (value === "") {
+    callback(new Error("邮箱不能为空!"));
+  } else if (!/^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$/.test(value)) {
+    callback(new Error("请输入正确的邮箱格式!"));
+  }
+  callback();
+};
+
+const recoveryRules = reactive({
+  username: [{ validator: validatePass, trigger: "blur" }],
+  email: [{ validator: validateEmail, trigger: "blur" }],
+});
+
+const switchToRecovery = () => {
+  isShowLogin.value = false;
+};
+
+const switchToLogin = () => {
+  isShowLogin.value = true;
+};
+
+const submitRecoveryForm = async formEl => {
+  if (!formEl) return;
+
+  try {
+    const valid = await formEl.validate();
+    if (!valid) return;
+
+    // 等待后端返回响应
+    const res = await userApi.resetPassword(recoveryForm);
+    const newPwd = res.data.User.password;
+
+    ElMessageBox.alert(`新的密码为：${newPwd}`, "密码已重置", {
+      confirmButtonText: "复制",
+      callback: async () => {
+        try {
+          await navigator.clipboard.writeText(newPwd);
+          ElMessage({
+            type: "success",
+            message: "复制成功",
+          });
+        } catch {
+          ElMessage({
+            type: "warning",
+            message: "复制失败",
+          });
+        }
+      },
+    });
+    // 跳转到登录页
+    switchToLogin();
+  } catch (error) {
+    // 统一错误处理
+    console.error("找回密码出错：", error);
+    ElMessage({
+      type: "error",
+      message: error?.message || "操作失败，请稍后再试",
+    });
+  }
+};
 </script>
 
 <style scoped>
@@ -208,6 +324,24 @@ h2 {
 }
 
 .login-submit {
+  width: 100%;
+}
+
+.recovery {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%);
+  width: 100%;
+  max-width: 20rem;
+}
+
+.switch-view {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.recovery-submit {
   width: 100%;
 }
 </style>

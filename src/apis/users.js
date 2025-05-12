@@ -37,6 +37,16 @@ const login = data => {
 const getAllUser = () => {
   return apiCilent.post("/user/all");
 };
+/**
+ * - 重置密码接口
+ * @param {Object} data - 传入对象
+ * @param {String} data.username - 用户名
+ * @param {String} data.email - 邮箱
+ * @returns - 重置密码结果
+ */
+const resetPassword = data => {
+  return apiCilent.post("/user/forget", data);
+};
 
 /**
  * - 获取邮箱验证码接口
@@ -85,4 +95,5 @@ export default {
   getUserInfo,
   banUser,
   setUserRole,
+  resetPassword,
 };
