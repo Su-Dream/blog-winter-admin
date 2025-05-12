@@ -30,7 +30,18 @@
           :style="message.role === 'user' ? 'margin-left: auto;' : ''"
         >
           <div v-if="message.role === 'assistant'" class="role">智能助手</div>
-          <div class="text" v-html="marked.parse(message.content)"></div>
+          <div class="text">
+            <div
+              v-if="message.reasoning"
+              class="reasoning-content"
+              v-html="marked.parse(message.reasoning)"
+            ></div>
+            <div
+              v-if="message.content"
+              class="response-content"
+              v-html="marked.parse(message.content)"
+            ></div>
+          </div>
         </div>
       </div>
     </div>
@@ -123,8 +134,9 @@ const sendMessage = async () => {
       }),
     };
 
-    // 创建一个临时的响应内容变量
+    // 创建临时的响应内容变量
     let responseContent = "";
+    let reasoningContent = "";
 
     // 发送请求并处理流式响应
     const response = await fetch(BASEURL, option);
@@ -149,7 +161,6 @@ const sendMessage = async () => {
 
       // 解码并发送给客户端
       const chunk = decoder.decode(value, { stream: true });
-      // console.log("chunk", chunk);
 
       // 解析数据流中的JSON数据
       const lines = chunk.split("\n").filter(line => line.trim() !== "");
@@ -164,7 +175,7 @@ const sendMessage = async () => {
             // 解析JSON数据
             const jsonData = JSON.parse(line.substring(6));
             if (jsonData.choices[0].delta.reasoning_content !== null) {
-              responseContent += jsonData.choices[0].delta.reasoning_content;
+              reasoningContent += jsonData.choices[0].delta.reasoning_content;
             } else {
               responseContent += jsonData.choices[0].delta.content;
             }
@@ -176,11 +187,14 @@ const sendMessage = async () => {
             ) {
               messages.value[messages.value.length - 1].content =
                 responseContent;
+              messages.value[messages.value.length - 1].reasoning =
+                reasoningContent;
             } else {
               // 如果最后一条不是AI消息，添加一条新的AI消息
               messages.value.push({
                 role: "assistant",
                 content: responseContent,
+                reasoning: reasoningContent,
               });
             }
           } catch (e) {
@@ -295,6 +309,19 @@ onMounted(() => {
   line-height: 1.5;
   white-space: pre-wrap;
   word-break: break-word;
+}
+
+.reasoning-content {
+  font-size: 14px;
+  color: #999;
+  border-left: 5px solid #ddd;
+  padding-left: 12px;
+  margin-bottom: 12px;
+}
+
+.response-content {
+  font-size: 16px;
+  color: #333;
 }
 
 @keyframes dot-flashing {
