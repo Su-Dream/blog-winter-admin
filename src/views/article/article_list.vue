@@ -158,6 +158,10 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.header {
+  display: flex;
+  justify-content: flex-end;
+}
 .article_list {
   width: 100%;
   padding: 16px;

@@ -7,12 +7,12 @@
         placeholder="请输入需要查询的标签名"
       >
       </el-input>
-    </div>
-    <el-divider />
-    <div class="art_add_tag">
       <el-button type="primary" @click="dialogVisible = true">
         添加标签
       </el-button>
+    </div>
+    <el-divider />
+    <div class="art_add_tag">
       <el-dialog v-model="dialogVisible" title="新增标签" width="500">
         <el-form-item label="标签名称:">
           <el-input v-model="tagName" placeholder="请输入需要添加的标签名">
@@ -141,6 +141,11 @@ get_tag_list();
   padding: 1rem;
   width: 100%;
   background-color: #fff;
+}
+.art_tags_search {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .edit {
   display: flex;

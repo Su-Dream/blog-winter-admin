@@ -7,12 +7,12 @@
         placeholder="请输入需要查询的分类名"
       >
       </el-input>
-    </div>
-    <el-divider />
-    <div class="art_add_type">
       <el-button type="primary" @click="dialogVisible = true">
         添加分类
       </el-button>
+    </div>
+    <el-divider />
+    <div class="art_add_type">
       <!-- 添加分类弹窗 -->
       <el-dialog
         v-model="dialogVisible"
@@ -173,6 +173,11 @@ get_type_list();
   padding: 1rem;
   width: 100%;
   background-color: #fff;
+}
+.art_types_search {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .edit {
   display: flex;
