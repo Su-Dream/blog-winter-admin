@@ -49,6 +49,7 @@ const onOpenAddLink = async () => {
   dialogVisible.value = true;
   title.value = "添加友链";
   dialogRef.value.onChangeState(dialogVisible.value);
+  getLinkData();
 };
 // 更新友链
 const onUpdateLink = row => {
@@ -62,11 +63,21 @@ const onUpdateLink = row => {
 const onChange = async (page, pageSize) => {
   console.log(page, pageSize);
 };
+// 删除友链
+const onRemoveLink = async row => {
+  try {
+    const res = await linkAPI.delLink(row.id);
+    ElMessage.success(res.msg || "删除成功");
+    getLinkData();
+  } catch (error) {
+    ElMessage.error(error.message || "删除失败");
+  }
+};
 </script>
 <template>
   <div class="link">
     <!-- 展示组件 -->
-    <Dialog :title="title" ref="dialogRef" />
+    <Dialog @referList="getLinkData" :title="title" ref="dialogRef" />
     <!-- 表格头 -->
     <div class="header">
       <!-- 搜索 -->
@@ -106,8 +117,7 @@ const onChange = async (page, pageSize) => {
                 >修改</el-button
               >
               <el-popconfirm
-                @confirm="onRemoveImage(row)"
-                @cancel="onCancel()"
+                @confirm="onRemoveLink(row)"
                 title="是否删除这条友链?"
               >
                 <template #reference>

@@ -36,7 +36,7 @@
     </el-dialog>
   </div>
 </template>
-<script lang="ts" setup>
+<script setup>
 import { reactive, ref } from "vue";
 import linkApi from "@/apis/links.js";
 import { ElMessage } from "element-plus";
@@ -44,7 +44,8 @@ import { ElMessage } from "element-plus";
 const dialogVisible = ref(false);
 // 组件标题
 const prop = defineProps(["title"]);
-
+// 接收父组件传递的方法
+const emit = defineEmits(["referList"]);
 // 表单
 const formInline = reactive({
   username: "",
@@ -64,14 +65,18 @@ const submit = async () => {
   // 添加友链
   if (prop.title === "添加友链") {
     const res = await linkApi.addlink(formInline);
-    ElMessage.success("添加友链成功");
+    ElMessage.success(res.msg || "添加友链成功");
+    // 调用父组件的方法刷新列表
+    emit("referList");
   }
   // 更新友链
   else if (prop.title === "更新友链") {
     const res = await linkApi.updateLink({
       ...formInline,
     });
-    ElMessage.success("更新友链成功");
+    ElMessage.success(res.msg || "更新友链成功");
+    // 调用父组件的方法刷新列表
+    emit("referList");
   }
   clearForm();
   onChangeState(false);

@@ -16,6 +16,7 @@
       >
         <el-breadcrumb-item
           v-for="(item, index) in route.matched"
+          :key="index"
           :to="{ path: route.matched[index].path }"
           >{{ route.matched[index].meta.title }}</el-breadcrumb-item
         >

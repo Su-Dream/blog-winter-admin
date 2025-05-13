@@ -88,19 +88,29 @@ const pageSize = ref(5);
 const dialogVisible = ref(false);
 // 添加标签
 const addArtTag = async () => {
-  if (tagName.value === "") {
-    ElMessage("标签内容不能为空");
-    return;
+  try {
+    if (tagName.value === "") {
+      ElMessage("标签内容不能为空");
+      return;
+    }
+    dialogVisible.value = false;
+    // 发送请求添加标签
+    const result = await tagApi.addTag(tagName.value);
+    console.log("addTag", result);
+    // 添加完成后将分类清空然后刷新列表
+    ElMessage({
+      message: result.data.message || "添加成功",
+      type: "error",
+    });
+    get_tag_list();
+    // 添加完成后吧标签名清空
+    tagName.value = "";
+  } catch (error) {
+    ElMessage({
+      message: error,
+      type: "error",
+    });
   }
-  dialogVisible.value = false;
-  // 发送请求添加标签
-  const result = await tagApi.addTag(tagName.value);
-  console.log("addTag", result);
-  // 添加完成后将分类清空然后刷新列表
-  get_tag_list();
-
-  // 添加完成后吧标签名清空
-  tagName.value = "";
 };
 // 删除标签
 const handleDelete = async (index, row) => {

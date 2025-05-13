@@ -115,7 +115,8 @@ onBeforeUnmount(() => {
 }
 .tac {
   user-select: none;
-  height: 100vh;
+  height: 100%;
+  min-height: 100vh;
 }
 .tac .el-menu-vertical {
   height: 100%;
