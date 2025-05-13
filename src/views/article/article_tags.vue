@@ -29,7 +29,7 @@
     <div class="art_tags_list">
       <el-table size="large" :data="artTagList" style="width: 100%">
         <el-table-column prop="name" label="标签名称"> </el-table-column>
-        <el-table-column prop="inlineCount" label="文章数量">0</el-table-column>
+        <el-table-column prop="postCount" label="文章数量"></el-table-column>
         <el-table-column
           prop="createdAt"
           sortable
