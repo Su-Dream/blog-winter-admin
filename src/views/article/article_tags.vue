@@ -100,7 +100,7 @@ const addArtTag = async () => {
     // 添加完成后将分类清空然后刷新列表
     ElMessage({
       message: result.data.message || "添加成功",
-      type: "error",
+      type: "success",
     });
     get_tag_list();
     // 添加完成后吧标签名清空

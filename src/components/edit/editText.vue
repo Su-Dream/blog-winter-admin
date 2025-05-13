@@ -62,6 +62,7 @@ const onUploadImg = async (files, callback) => {
   callback(
     res.map(item => {
       console.log(item);
+      // 后端返回的图片地址
       return item.data.data.url;
     })
   );

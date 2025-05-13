@@ -152,6 +152,8 @@ defineExpose({
     }
   },
 });
+// 接收父组件传递的方法
+const emit = defineEmits(["referList"]);
 // 校验发布时候的必填项
 const validataArt = () => {
   let isValid = true;
@@ -310,9 +312,9 @@ const onSubmit = async () => {
       type: "success",
     });
   }
-  visible.value = false;
   // 刷新文章列表
-  // getArticleList();
+  emit("referList");
+  visible.value = false;
 };
 
 // 同步封面图

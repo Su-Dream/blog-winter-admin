@@ -1,6 +1,6 @@
 <template>
   <div class="article_list">
-    <article-toast ref="childRef" />
+    <article-toast @referList="getArticleList" ref="childRef" />
     <div class="header">
       <!-- 发布文章 -->
       <el-button type="primary" @click="onSendArt">发布文章</el-button>
