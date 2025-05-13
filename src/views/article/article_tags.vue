@@ -20,14 +20,14 @@
         </el-form-item>
         <template #footer>
           <div class="dialog-footer">
-            <el-button @click="dialogVisible = false">Cancel</el-button>
-            <el-button type="primary" @click="addArtTag()"> OK </el-button>
+            <el-button @click="dialogVisible = false">取消</el-button>
+            <el-button type="primary" @click="addArtTag()"> 确定 </el-button>
           </div>
         </template>
       </el-dialog>
     </div>
     <div class="art_tags_list">
-      <el-table size="large" :data="artTagList" style="width: 100%">
+      <el-table size="large" :data="filteredArtTagList" style="width: 100%">
         <el-table-column prop="name" label="标签名称"> </el-table-column>
         <el-table-column prop="postCount" label="文章数量"></el-table-column>
         <el-table-column
@@ -38,14 +38,6 @@
         <el-table-column label="操作">
           <template #default="scope">
             <div class="edit">
-              <!-- <el-link
-                :underline="false"
-                :icon="Edit"
-                @click="handleEdit(scope.$index, scope.row)"
-                type="primary"
-              >
-                编辑
-              </el-link> -->
               <el-popconfirm
                 title="确定删除这个标签?不可恢复!"
                 @confirm="handleDelete(scope.$index, scope.row)"
@@ -73,10 +65,19 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { Edit, Delete } from "@element-plus/icons-vue";
 import tagApi from "@/apis/tags.js";
 const search = ref("");
+// 搜索功能
+const filteredArtTagList = computed(() => {
+  if (!search.value) {
+    return artTagList.value;
+  }
+  return artTagList.value.filter(item =>
+    item.name.toLowerCase().includes(search.value.toLowerCase())
+  );
+});
 const tagName = ref("");
 // 总条数
 const total = ref(0);
@@ -84,7 +85,6 @@ const total = ref(0);
 const page = ref(1);
 // 每页条数
 const pageSize = ref(5);
-
 const dialogVisible = ref(false);
 // 添加标签
 const addArtTag = async () => {
