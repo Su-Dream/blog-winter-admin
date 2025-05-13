@@ -106,7 +106,11 @@ const goProfile = () => {
 };
 // 跳转链接
 const goUrl = url => {
-  window.open(url, "_blank");
+  if (url) {
+    window.open(url, "_blank");
+  } else {
+    ElMessage.warning("该用户没有绑定任何链接，请在个人设置中绑定");
+  }
 };
 </script>
 
