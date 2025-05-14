@@ -19,7 +19,7 @@
           <el-tooltip
             class="box-item"
             effect="dark"
-            content="支持HTML"
+            content="C端用户看到的网站LOGO文本"
             placement="top"
           >
             <span
@@ -34,11 +34,30 @@
       </div>
       <div class="site_setting_item">
         <p class="title">
+          <span class="site_text">网站公告</span>
+          <el-tooltip
+            class="box-item"
+            effect="dark"
+            content="网站公告内容"
+            placement="top"
+          >
+            <span
+              ><el-icon size="16"><InfoFilled /></el-icon
+            ></span>
+          </el-tooltip>
+        </p>
+        <el-input
+          v-model="blogConfig.announcement"
+          placeholder="Please input Site Info"
+        />
+      </div>
+      <div class="site_setting_item">
+        <p class="title">
           <span class="site_text">网站meta文本</span>
           <el-tooltip
             class="box-item"
             effect="dark"
-            content="支持HTML"
+            content="网站meta文本，用于SEO"
             placement="top"
           >
             <span
@@ -59,7 +78,7 @@
           <el-tooltip
             class="box-item"
             effect="dark"
-            content="支持HTML"
+            content="网站底部的备案信息,不填写默认为：赣ICP备2024044145号"
             placement="top"
           >
             <span
