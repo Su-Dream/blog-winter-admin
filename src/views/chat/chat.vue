@@ -2,20 +2,24 @@
   <div class="chat-container">
     <!-- 聊天界面头部 -->
     <div class="chat-header">
-      <h2>智能对话</h2>
-      <!-- 模型选择下拉框 -->
-      <el-select
-        v-model="selectedModel"
-        placeholder="请选择模型"
-        class="model-select"
-      >
-        <el-option
-          v-for="model in modelOptions"
-          :key="model.value"
-          :label="model.label"
-          :value="model.value"
-        />
-      </el-select>
+      <h2>{{ selectedModel }}</h2>
+      <div class="header-controls">
+        <el-button type="danger" size="small" @click="clearChatHistory">
+          清空聊天记录
+        </el-button>
+        <el-select
+          v-model="selectedModel"
+          placeholder="请选择模型"
+          class="model-select"
+        >
+          <el-option
+            v-for="model in modelOptions"
+            :key="model.value"
+            :label="model.label"
+            :value="model.value"
+          />
+        </el-select>
+      </div>
     </div>
 
     <!-- 聊天消息区域 -->
@@ -29,18 +33,25 @@
           class="content"
           :style="message.role === 'user' ? 'margin-left: auto;' : ''"
         >
-          <div v-if="message.role === 'assistant'" class="role">智能助手</div>
+          <div v-if="message.role === 'assistant'" class="role"></div>
           <div class="text">
-            <div
-              v-if="message.reasoning"
-              class="reasoning-content"
-              v-html="marked.parse(message.reasoning)"
-            ></div>
-            <div
-              v-if="message.content"
-              class="response-content"
-              v-html="marked.parse(message.content)"
-            ></div>
+            <!-- 用户消息直接显示文本 -->
+            <template v-if="message.role === 'user'">
+              <div class="user-message">{{ message.content }}</div>
+            </template>
+            <!-- AI消息使用Markdown渲染 -->
+            <template v-else>
+              <MdPreview
+                v-if="message.reasoning"
+                :id="id + '-reasoning'"
+                :modelValue="message.reasoning"
+              />
+              <MdPreview
+                v-if="message.content"
+                :id="id + '-content'"
+                :modelValue="message.content"
+              />
+            </template>
           </div>
         </div>
       </div>
@@ -69,13 +80,18 @@
 
 <script setup>
 import { marked } from "marked";
-import { ref, reactive, onMounted, nextTick, computed } from "vue";
+import { ref, reactive, onMounted, nextTick, computed, watch } from "vue";
 import { ElMessage } from "element-plus";
 const BASEURL = import.meta.env.VITE_SERVER_URL + "llm/chat";
 import { getUserToken } from "@/utils/util";
 import { useProfileStore } from "@/stores/profile";
 const profileStore = useProfileStore();
 console.log(profileStore.profile.UserProfile.avatar);
+
+import { MdPreview } from "md-editor-v3";
+// preview.css相比style.css少了编辑器那部分样式
+import "md-editor-v3/lib/preview.css";
+const id = "preview-only";
 
 // 定义响应式变量
 const userInput = ref(""); // 用户输入
@@ -223,13 +239,63 @@ const sendMessage = async () => {
   }
 };
 
+// 保存聊天记录到本地存储
+const saveChatHistory = () => {
+  const chatHistory = {
+    messages: messages.value,
+    model: selectedModel.value,
+    timestamp: new Date().toISOString(),
+  };
+  localStorage.setItem("chatHistory", JSON.stringify(chatHistory));
+};
+
+// 从本地存储加载聊天记录
+const loadChatHistory = () => {
+  const savedHistory = localStorage.getItem("chatHistory");
+  if (savedHistory) {
+    try {
+      const history = JSON.parse(savedHistory);
+      messages.value = history.messages;
+      selectedModel.value = history.model;
+      scrollToBottom();
+    } catch (e) {
+      console.error("加载聊天记录失败:", e);
+      ElMessage.warning("加载历史聊天记录失败");
+    }
+  }
+};
+
+// 清空聊天记录
+const clearChatHistory = () => {
+  messages.value = [];
+  localStorage.removeItem("chatHistory");
+  ElMessage.success("聊天记录已清空");
+};
+
+// 监听消息变化，自动保存
+watch(
+  messages,
+  () => {
+    saveChatHistory();
+  },
+  { deep: true }
+);
+
+// 监听模型变化，自动保存
+watch(selectedModel, () => {
+  saveChatHistory();
+});
+
 // 组件挂载时执行
 onMounted(() => {
-  // 添加欢迎消息
-  messages.value.push({
-    role: "assistant",
-    content: "你好！我是智能助手，有什么我可以帮助你的吗？",
-  });
+  loadChatHistory();
+  // 如果没有历史记录，添加欢迎消息
+  if (messages.value.length === 0) {
+    messages.value.push({
+      role: "assistant",
+      content: "你好！有什么我可以帮助你的吗？",
+    });
+  }
 });
 </script>
 
@@ -241,8 +307,8 @@ onMounted(() => {
   margin: 0 auto;
   width: 80%;
   height: 100%;
-  max-height: 800px;
-  background-color: #ffffff;
+  max-height: calc(100vh - 110px);
+  background-color: #f2f6fc;
   /* padding: 20px; */
   box-sizing: border-box;
 }
@@ -255,6 +321,12 @@ onMounted(() => {
   padding: 20px;
   background-color: #79a5ff;
   margin-bottom: 20px;
+}
+
+.header-controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
 }
 
 .model-select {
@@ -270,7 +342,7 @@ onMounted(() => {
   flex-direction: column;
   gap: 20px;
   margin-bottom: 20px;
-  background-color: white;
+  background-color: #f2f6fc;
   border-radius: 8px;
 }
 
@@ -306,22 +378,15 @@ onMounted(() => {
 }
 
 .message .text {
-  line-height: 1.5;
-  white-space: pre-wrap;
+  line-height: 20px;
+  /* white-space: pre-wrap; */
   word-break: break-word;
 }
-
-.reasoning-content {
+#preview-only-reasoning :deep(.md-editor-preview) {
   font-size: 14px;
   color: #999;
+  padding-left: 14px;
   border-left: 5px solid #ddd;
-  padding-left: 12px;
-  margin-bottom: 12px;
-}
-
-.response-content {
-  font-size: 16px;
-  color: #333;
 }
 
 @keyframes dot-flashing {
@@ -349,5 +414,10 @@ onMounted(() => {
 
 .chat-input .el-button {
   align-self: flex-end;
+}
+
+.user-message {
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 </style>
