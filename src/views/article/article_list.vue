@@ -19,6 +19,7 @@
               <el-image
                 style="width: 100px; height: 100px"
                 :src="scope.row.picture"
+                fit="cover"
                 preview-teleported
                 :preview-src-list="[scope.row.picture]"
               />
@@ -122,6 +123,7 @@ const onSendArt = () => {
     updatedAt: "",
     Category: "",
     Tags: [],
+    description: "",
   });
 };
 // 编辑文章
