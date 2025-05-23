@@ -289,7 +289,7 @@ const onSubmit = async () => {
       content: article.value.content,
       category_id: article.value.category_id,
       picture: article.value.picture,
-      tags: article.value.Tags,
+      tags: currentTagList.value || article.value.Tags,
       description: article.value.description,
     };
     console.log("更新文章", params);
